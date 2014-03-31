@@ -6,6 +6,36 @@
 </head>
 <body>
     <h1>Test API Etalab JS</h1>
+    <h2>Json en entrée</h2>
+    <code>
+		{<br>
+		    &nbsp;&nbsp;test_case: {<br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;familles: [{<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parents: ["ind0", "ind1"],<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enfants: ["ind2", "ind3"]<br>	
+		        &nbsp;&nbsp;&nbsp;&nbsp;}],<br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;foyers_fiscaux: [{<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;declarants: ["ind0", "ind1"],<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;personnes_a_charge: ["ind2", "ind3"]<br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;}],<br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;individus: [<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ activite: "Actif occupé", birth: "1970-01-01", cadre: true, id: "ind0", sali: 35000, statmarit: "Marié" },<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ activite: "Actif occupé", birth: "1970-01-02", cadre: true, id: "ind1", sali: 35000, statmarit: "Marié" },<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ activite: "Étudiant, élève", birth: "2000-01-03", id: "ind2" },<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ activite: "Étudiant, élève", birth: "2000-01-04", id: "ind3" }], <br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;menages: [{<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;personne_de_reference: "ind0",<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;conjoint: "ind1",<br>
+		            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enfants: ["ind2", "ind3"] <br>
+		        &nbsp;&nbsp;&nbsp;&nbsp;}]<nr>
+		    &nbsp;&nbsp;},<br>
+		    &nbsp;&nbsp;year: 2013<br>
+		} 
+    </code><br>
+    <h2>Json en sortie</h2>
+    <code id="json_returned">
+    	
+    </code>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="js/test_api.js"></script>
 </body>

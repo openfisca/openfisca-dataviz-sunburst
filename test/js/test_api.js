@@ -2,27 +2,29 @@
 // Json object
 var scenario = {
     test_case: {
-        familles: {
+        familles: [{
             parents: ["ind0", "ind1"],
             enfants: ["ind2", "ind3"]
-        },
-        foyers_fiscaux: {
+        }],
+        foyers_fiscaux: [{
             declarants: ["ind0", "ind1"],
             personnes_a_charge: ["ind2", "ind3"]
-        },
+        }],
         individus: [
-            { activite: "Actif occupé", birth: "1970-01-01", cadre: "true", id: "ind0", sali: 35000, statmarit: "Marié" },
-            { activite: "Actif occupé", birth: "1970-01-02", cadre: "true", id: "ind1", sali: 35000, statmarit: "Marié" },
+            { activite: "Actif occupé", birth: "1970-01-01", cadre: true, id: "ind0", sali: 35000, statmarit: "Marié" },
+            { activite: "Actif occupé", birth: "1970-01-02", cadre: true, id: "ind1", sali: 35000, statmarit: "Marié" },
             { activite: "Étudiant, élève", birth: "2000-01-03", id: "ind2" },
             { activite: "Étudiant, élève", birth: "2000-01-04", id: "ind3" }], 
-        menages: {
+        menages: [{
             personne_de_reference: "ind0",
             conjoint: "ind1",
             enfants: ["ind2", "ind3"] 
-        }
+        }]
     },
     year: 2013    
 }
+
+console.log(JSON.stringify(scenario));
 
 // Connexion à l'api
 $.ajax("http://api.openfisca.fr/api/1/simulate", {
@@ -38,7 +40,8 @@ $.ajax("http://api.openfisca.fr/api/1/simulate", {
 })
 .done(function (data, textStatus, jqXHR) {
     // Data incoming...
-    console.log(data);
+    var dataString = JSON.stringify(data);
+    $('code#json_returned').text(dataString);
 })
 .fail(function (jqXHR, textStatus, errorThrown) {
     // err
