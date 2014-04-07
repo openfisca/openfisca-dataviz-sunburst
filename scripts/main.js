@@ -60,7 +60,17 @@
     onClick = function(d) {
       return path.transition().duration(750).attrTween('d', arcTween(d));
     };
-    path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('data-name', root.name).attr('data-value', Math.round(root.values[0])).attr('d', arc).style('fill', function(d) {
+    path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('data-name', function(d) {
+      return d.name;
+    }).attr('data-value', function(d) {
+      return Math.round(d.values[0]);
+    }).attr('class', function(d) {
+      if (d.values[0] > 0) {
+        return 'positive';
+      } else {
+        return 'negative';
+      }
+    }).attr('d', arc).style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
     }).on('click', onClick);
   });

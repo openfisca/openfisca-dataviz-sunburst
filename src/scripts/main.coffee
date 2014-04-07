@@ -10,8 +10,6 @@ arcTween = (d) ->
       y.domain(yd(t)).range yr(t)
       arc d
     )
-		
-
 
 width = 960
 height = 700
@@ -52,13 +50,13 @@ d3.json 'data/flare2.json', (error, root) ->
 		.data partition.nodes root
 		.enter()
 		.append 'path'
-		.attr 'data-name', root.name
-		.attr 'data-value', Math.round root.values[0]
+		.attr 'data-name', (d) -> d.name
+		.attr 'data-value', (d) -> Math.round d.values[0]
+		.attr 'class', (d) -> if d.values[0] > 0 then 'positive' else 'negative'
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name
 		.on 'click', onClick
-	
 
 	return
 
