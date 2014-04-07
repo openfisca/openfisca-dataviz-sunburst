@@ -29,15 +29,20 @@ svg = d3.select 'body'
 	.append 'g'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2 + 10) + ')'
 partition = d3.layout.partition()
-	.value (d) -> d.size 
+	.value (d) -> 
+		console.log '[Old] ' + d.name + ' : ' + d.values[0]
+		d.values[0] = Math.abs Math.round d.values[0]
+		console.log '[New] ' + d.name + ' : ' + d.values[0]
+		d.values[0] 
 arc = d3.svg.arc()
 	.startAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x))
 	.endAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x + d.dx))
 	.innerRadius (d) -> Math.max 0, y(d.y)
 	.outerRadius (d) -> Math.max 0, y(d.y + d.dy)
 
-d3.json 'data/flare.json', (error, root) ->
-	
+d3.json 'data/flare2.json', (error, root) ->
+	root = root.value
+	console.log root
 	onClick = (d) ->
 		path.transition()
 			.duration 750
@@ -47,6 +52,8 @@ d3.json 'data/flare.json', (error, root) ->
 		.data partition.nodes root
 		.enter()
 		.append 'path'
+		.attr 'data-name', root.name
+		.attr 'data-value', Math.round root.values[0]
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name

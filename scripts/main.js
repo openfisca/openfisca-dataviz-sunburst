@@ -37,7 +37,10 @@
   svg = d3.select('body').append('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2 + 10) + ')');
 
   partition = d3.layout.partition().value(function(d) {
-    return d.size;
+    console.log('[Old] ' + d.name + ' : ' + d.values[0]);
+    d.values[0] = Math.abs(Math.round(d.values[0]));
+    console.log('[New] ' + d.name + ' : ' + d.values[0]);
+    return d.values[0];
   });
 
   arc = d3.svg.arc().startAngle(function(d) {
@@ -50,12 +53,14 @@
     return Math.max(0, y(d.y + d.dy));
   });
 
-  d3.json('data/flare.json', function(error, root) {
+  d3.json('data/flare2.json', function(error, root) {
     var onClick, path;
+    root = root.value;
+    console.log(root);
     onClick = function(d) {
       return path.transition().duration(750).attrTween('d', arcTween(d));
     };
-    path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('d', arc).style('fill', function(d) {
+    path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('data-name', root.name).attr('data-value', Math.round(root.values[0])).attr('d', arc).style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
     }).on('click', onClick);
   });
