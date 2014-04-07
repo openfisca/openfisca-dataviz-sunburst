@@ -10,11 +10,38 @@ arcTween = (d) ->
       y.domain(yd(t)).range yr(t)
       arc d
     )
+
+# Tooltip element
+tooltip = d3.select('#tooltip')
+tooltipW = tooltip[0][0].scrollWidth;
+tooltipH = tooltip[0][0].scrollHeight
+
+# Tooltip functions
+showTooltip = (d) ->
+	tooltip.transition()
+		.duration 300
+		.style 'opacity', 1
+	# Update the content
+	tooltip.select('#tooltip--label')
+		.text d.name
+	tooltip.select('#tooltip--value')
+		.text d.value + ' €'
+
+updateTooltip = () ->
+	tooltip.style 'top', d3.event.pageY - tooltipH  + 'px'
+	tooltip.style 'left', (d3.event.pageX - tooltipW / 2) + 'px'
+
+hideTooltip = () ->
+	tooltip.transition()
+		.duration 300
+		.style 'opacity', 1e-6
+
+
 colors = 
 	positive: ['#1DC2F7', '#1BB6E8', '#1AAEDE', '#18A2CF', '#1696BF', '#1A8BB3', '#127899', '#136480', '#0E5066','#0B3C4D']
 	negative: ['#ff747d', '#f5646d', '#ef5761', '#eb4c56', '#df4650', '#d23c46', '#c4343d', '#b72b34', '#a9242d', '#9a1b23']
 
-width = 960
+width = 700
 height = 700
 radius = Math.min(width, height) / 2
 x = d3.scale.linear()
@@ -45,6 +72,7 @@ d3.json 'data/example.json', (error, root) ->
 	root = root.value
 	console.log root
 	onClick = (d) ->
+		console.log('hey');
 		path.transition()
 			.duration 750
 			.attrTween 'd', arcTween(d)
@@ -59,6 +87,9 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name
+		.on 'mouseover', showTooltip
+		.on 'mousemove', updateTooltip
+		.on 'mouseout', hideTooltip
 		.on 'click', onClick
 
 	return
@@ -66,4 +97,3 @@ d3.json 'data/example.json', (error, root) ->
 
 d3.select self.frameElement
 	.style 'height', height + 'px'
-
