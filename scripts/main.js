@@ -58,7 +58,7 @@
     return Math.max(0, y(d.y + d.dy));
   });
 
-  d3.json('data/flare2.json', function(error, root) {
+  d3.json('data/example.json', function(error, root) {
     var onClick, path;
     root = root.value;
     console.log(root);

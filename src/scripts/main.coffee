@@ -41,7 +41,7 @@ arc = d3.svg.arc()
 	.innerRadius (d) -> Math.max 0, y(d.y)
 	.outerRadius (d) -> Math.max 0, y(d.y + d.dy)
 
-d3.json 'data/flare2.json', (error, root) ->
+d3.json 'data/example.json', (error, root) ->
 	root = root.value
 	console.log root
 	onClick = (d) ->
