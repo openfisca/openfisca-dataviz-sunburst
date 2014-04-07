@@ -1,4 +1,69 @@
+/***************/
+/* @group Main */
+/***************/
+@import url(reset.css);
+
+/****************/
+/* @group Fonts */
+/****************/
+@import url(http://fonts.googleapis.com/css?family=Arvo|Poiret+One);
+/* @end of Fonts */
+
+
+body {
+	font-family: 'Arvo', serif;
+	font-size: 1em; 
+	background: #eee;
+	color: #909090; }
+hr { border: 0; }
+a { text-decoration: none; }
+i { text-align: left; text-indent: -9999px; overflow: hidden; }
+.clear { clear: both; }
+.number { font-family: 'Poiret One', cursive; }
+
+svg { position: absolute; left: 0; top: 0; bottom: 0; right: 0; margin: auto; }
+
 path {
   stroke: #fff;
-  fill-rule: evenodd;
-}
+  fill-rule: evenodd; }
+
+
+/******************/
+/* @group Tooltip */
+/******************/
+div#tooltip {
+	position: absolute;
+	width: 340px;
+	background: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.5);
+	z-index: 10;
+	text-align: center;
+	border: 1px solid transparent; }
+div#tooltip:after {
+	content: '';
+	display: block;
+	position: absolute;
+	margin: 0 auto;
+	left: 0; right: 0; bottom: -15px;
+	width: 0; height: 0;
+	border-top: 15px solid #fff;
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent; }
+div#tooltip h2#tooltip--label {
+	color: #414454;
+	font-size: 1.125em;
+	margin: 30px auto; }
+div#tooltip hr {
+	background: #eee;
+	height: 1px; width: 100%; }
+div#tooltip p#tooltip--value {
+	font-size: 2.188em;
+	margin: 40px auto 30px;
+	color: #eb4c56; }
+div#tooltip a#tooltip--find-out-more {
+	color: #9f9f9f;
+	display: block;
+	margin: 20px auto 15px;
+	font-size: 0.938em; }
+/* @end of Main */
