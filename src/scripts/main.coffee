@@ -10,11 +10,6 @@ arcTween = (d) ->
       y.domain(yd(t)).range yr(t)
       arc d
     )
-		
-colors = 
-	positive: ['#1DC2F7', '#1BB6E8', '#1AAEDE', '#18A2CF', '#1696BF', '#1A8BB3', '#127899', '#136480', '#0E5066','#0B3C4D']
-	negative: ['#ff747d', '#f5646d', '#ef5761', '#eb4c56', '#df4650', '#d23c46', '#c4343d', '#b72b34', '#a9242d', '#9a1b23']
-
 
 width = 960
 height = 700
@@ -32,15 +27,20 @@ svg = d3.select 'body'
 	.append 'g'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2 + 10) + ')'
 partition = d3.layout.partition()
-	.value (d) -> d.size 
+	.value (d) -> 
+		console.log '[Old] ' + d.name + ' : ' + d.values[0]
+		d.values[0] = Math.abs Math.round d.values[0]
+		console.log '[New] ' + d.name + ' : ' + d.values[0]
+		d.values[0] 
 arc = d3.svg.arc()
 	.startAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x))
 	.endAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x + d.dx))
 	.innerRadius (d) -> Math.max 0, y(d.y)
 	.outerRadius (d) -> Math.max 0, y(d.y + d.dy)
 
-d3.json 'data/flare.json', (error, root) ->
-	
+d3.json 'data/flare2.json', (error, root) ->
+	root = root.value
+	console.log root
 	onClick = (d) ->
 		path.transition()
 			.duration 750
@@ -50,11 +50,13 @@ d3.json 'data/flare.json', (error, root) ->
 		.data partition.nodes root
 		.enter()
 		.append 'path'
+		.attr 'data-name', (d) -> d.name
+		.attr 'data-value', (d) -> Math.round d.values[0]
+		.attr 'class', (d) -> if d.values[0] > 0 then 'positive' else 'negative'
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name
 		.on 'click', onClick
-	
 
 	return
 

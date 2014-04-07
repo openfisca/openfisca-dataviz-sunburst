@@ -1,0 +1,1486 @@
+{
+    "apiVersion": "1.0",
+    "method": "/api/1/simulate",
+    "params": {
+        "scenarios": [
+            {
+                "test_case": {
+                    "foyers_fiscaux": [
+                        {
+                            "personnes_a_charge": [
+                                "ind2",
+                                "ind3"
+                            ],
+                            "declarants": [
+                                "ind0",
+                                "ind1"
+                            ]
+                        }
+                    ],
+                    "individus": [
+                        {
+                            "sali": 35000,
+                            "activite": "Actif occupé",
+                            "statmarit": "Marié",
+                            "cadre": true,
+                            "birth": "1970-01-01"
+                        },
+                        {
+                            "sali": 35000,
+                            "activite": "Actif occupé",
+                            "statmarit": "Marié",
+                            "cadre": true,
+                            "birth": "1970-01-02"
+                        },
+                        {
+                            "activite": "Étudiant, élève",
+                            "birth": "2000-01-03"
+                        },
+                        {
+                            "activite": "Étudiant, élève",
+                            "birth": "2000-01-04"
+                        }
+                    ],
+                    "familles": [
+                        {
+                            "enfants": [
+                                "ind2",
+                                "ind3"
+                            ],
+                            "parents": [
+                                "ind0",
+                                "ind1"
+                            ]
+                        }
+                    ],
+                    "menages": [
+                        {
+                            "conjoint": "ind1",
+                            "enfants": [
+                                "ind2",
+                                "ind3"
+                            ],
+                            "personne_de_reference": "ind0"
+                        }
+                    ]
+                },
+                "year": 2013
+            }
+        ]
+    },
+    "url": "http://api.openfisca.fr/api/1/simulate",
+    "value": {
+        "@context": "http://openfisca.fr/contexts/decomposition.jsonld",
+        "@type": "Node",
+        "color": [
+            0,
+            0,
+            255
+        ],
+        "short_name": "Rev. disp.",
+        "code": "revdisp",
+        "type": 2,
+        "name": "Revenu disponible",
+        "children": [
+            {
+                "@type": "Node",
+                "color": [
+                    0,
+                    155,
+                    204
+                ],
+                "short_name": "Rev. nets",
+                "code": "rev_net",
+                "name": "Revenus nets",
+                "children": [
+                    {
+                        "@type": "Node",
+                        "color": [
+                            0,
+                            155,
+                            204
+                        ],
+                        "short_name": "Rev. travail",
+                        "code": "rev_trav",
+                        "name": "Revenu du travail",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    0,
+                                    138,
+                                    201
+                                ],
+                                "short_name": "Sal. nets",
+                                "code": "salnet",
+                                "name": "Salaires nets",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            0,
+                                            115,
+                                            170
+                                        ],
+                                        "short_name": "Sal. impos.",
+                                        "code": "sal",
+                                        "name": "Salaires imposables",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    0,
+                                                    99,
+                                                    143
+                                                ],
+                                                "short_name": "Sal. bruts",
+                                                "code": "salbrut",
+                                                "name": "Salaires bruts",
+                                                "children": [
+                                                    {
+                                                        "@type": "Node",
+                                                        "color": [
+                                                            0,
+                                                            66,
+                                                            92
+                                                        ],
+                                                        "short_name": "Coût travail",
+                                                        "code": "salsuperbrut",
+                                                        "name": "Salaires super bruts",
+                                                        "values": [
+                                                            124209.1171875
+                                                        ]
+                                                    },
+                                                    {
+                                                        "@type": "Node",
+                                                        "color": [
+                                                            249,
+                                                            208,
+                                                            211
+                                                        ],
+                                                        "short_name": "Cotsoc pat",
+                                                        "code": "cotpat",
+                                                        "name": "Cotisations sociales patronales",
+                                                        "values": [
+                                                            -38232.8984375
+                                                        ]
+                                                    },
+                                                    {
+                                                        "@type": "Node",
+                                                        "short_name": "Allèg. sal.",
+                                                        "code": "alleg_fillon",
+                                                        "name": "Allègement sur les bas salaires (Fillon)",
+                                                        "values": [
+                                                            0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "@type": "Node",
+                                                        "short_name": "CICE",
+                                                        "code": "alleg_cice",
+                                                        "name": "Crédit d'impôt compétitivité-emploi",
+                                                        "values": [
+                                                            0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "@type": "Node",
+                                                        "short_name": "Taxe sal.",
+                                                        "code": "taxes_sal",
+                                                        "name": "Taxe sur les salaires",
+                                                        "values": [
+                                                            0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "@type": "Node",
+                                                        "short_name": "TEHR",
+                                                        "code": "tehr",
+                                                        "name": "Taxe exceptionnelle sur les hauts revenus",
+                                                        "values": [
+                                                            0
+                                                        ]
+                                                    }
+                                                ],
+                                                "values": [
+                                                    85976.21875
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Cotsoc sal",
+                                                "code": "cotsal",
+                                                "name": "Cotisations sociales salariées",
+                                                "values": [
+                                                    -11668.166015625
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG deduc",
+                                                "code": "csgsald",
+                                                "name": "CSG déductible (salaires)",
+                                                "values": [
+                                                    -4308.05322265625
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    0,
+                                                    115,
+                                                    170
+                                                ],
+                                                "short_name": "Heures sup",
+                                                "code": "mhsup",
+                                                "name": "Heures supplémentaires éxonérées",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            69999.99951171875
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            235,
+                                            114,
+                                            118
+                                        ],
+                                        "short_name": "CSG imp. sal.",
+                                        "code": "csgsali",
+                                        "name": "CSG non déductible (salaires)",
+                                        "values": [
+                                            -2027.3192138671875
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            229,
+                                            48,
+                                            56
+                                        ],
+                                        "short_name": "CRDS sal.",
+                                        "code": "crdssal",
+                                        "name": "CRDS (salaires)",
+                                        "values": [
+                                            -422.3581848144531
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            0,
+                                            115,
+                                            170
+                                        ],
+                                        "short_name": "Heures sup",
+                                        "code": "hsup",
+                                        "name": "Heures supplémentaires",
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    67550.32211303711
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "short_name": "Rev. agric.",
+                                "code": "rag",
+                                "name": "Revenus agricoles",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "short_name": "R. ind. comm.",
+                                "code": "ric",
+                                "name": "Revenus industriels et commerciaux",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "short_name": "R. non comm.",
+                                "code": "rnc",
+                                "name": "Revenus non commerciaux",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            67550.32211303711
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            97,
+                            75,
+                            150
+                        ],
+                        "short_name": "Pensions",
+                        "code": "pen",
+                        "name": "Pensions",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    136,
+                                    120,
+                                    178
+                                ],
+                                "short_name": "Chômage net",
+                                "code": "chonet",
+                                "name": "Chômage net",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "Chômage decl.",
+                                        "code": "cho",
+                                        "name": "Chômage",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "short_name": "Chômage brut",
+                                                "code": "chobrut",
+                                                "name": "Chômage brut",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG déd. chôm.",
+                                                "code": "csgchod",
+                                                "name": "CSG déductible (chômage)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            235,
+                                            114,
+                                            118
+                                        ],
+                                        "short_name": "CSG imp. chôm.",
+                                        "code": "csgchoi",
+                                        "name": "CSG non déductible (chômage)",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            229,
+                                            48,
+                                            56
+                                        ],
+                                        "short_name": "CRDS chôm.",
+                                        "code": "crdscho",
+                                        "name": "CRDS (chômage)",
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    87,
+                                    88,
+                                    138
+                                ],
+                                "short_name": "Retraites nettes",
+                                "code": "rstnet",
+                                "name": "Retraites nettes",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "Retr. décl.",
+                                        "code": "rst",
+                                        "name": "Retraites",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "short_name": "Retr. brutes",
+                                                "code": "rstbrut",
+                                                "name": "Retraites brutes",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG déd. ret.",
+                                                "code": "csgrstd",
+                                                "name": "CSG déductible (retraite)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            235,
+                                            114,
+                                            118
+                                        ],
+                                        "short_name": "CSG imp. pens.",
+                                        "code": "csgrsti",
+                                        "name": "CSG non déductible (pensions)",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            229,
+                                            48,
+                                            56
+                                        ],
+                                        "short_name": "CRDS (pens.)",
+                                        "code": "crdsrst",
+                                        "name": "CRDS (pensions)",
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    136,
+                                    120,
+                                    178
+                                ],
+                                "short_name": "P. alim. reç.",
+                                "code": "alr",
+                                "name": "Pensions alimentaires reçues",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    136,
+                                    120,
+                                    178
+                                ],
+                                "short_name": "P. alim. vers.",
+                                "code": "alv",
+                                "name": "Pensions alimentaires versée",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    125,
+                                    185,
+                                    86
+                                ],
+                                "short_name": "Rentes viag.",
+                                "code": "rto",
+                                "name": "Rentes viagères",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            0
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            255,
+                            222,
+                            48
+                        ],
+                        "short_name": "Rev. cap. net",
+                        "code": "rev_cap_net",
+                        "name": "Revenus du capital net",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    255,
+                                    222,
+                                    48
+                                ],
+                                "short_name": "Rev. cap. brut",
+                                "code": "rev_cap_brut",
+                                "name": "Revenus du capital brut",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            255,
+                                            245,
+                                            155
+                                        ],
+                                        "short_name": "Rev. fonciers",
+                                        "code": "fon",
+                                        "name": "Revenus fonciers",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            255,
+                                            245,
+                                            155
+                                        ],
+                                        "short_name": "Plus.-values mo.",
+                                        "code": "f3vg",
+                                        "name": "Plus-values de cessions de valeurs mobilières",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            255,
+                                            245,
+                                            155
+                                        ],
+                                        "short_name": "Plus.-values immo.",
+                                        "code": "f3vz",
+                                        "name": "Plus-values immobilières",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            255,
+                                            239,
+                                            103
+                                        ],
+                                        "short_name": "Rev cap bar",
+                                        "code": "rev_cap_bar",
+                                        "name": "Revenus du capital soumis au barème",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            255,
+                                            233,
+                                            28
+                                        ],
+                                        "short_name": "Rev cap lib",
+                                        "code": "rev_cap_lib",
+                                        "name": "Revenus du capital soumis au prélèvement libératoire",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            247,
+                                            221,
+                                            0
+                                        ],
+                                        "short_name": "Rev. accesoires",
+                                        "code": "rac",
+                                        "name": "Revenus accessoires",
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    243,
+                                    166,
+                                    171
+                                ],
+                                "short_name": "Cotsoc. capital",
+                                "code": "cotsoc_cap",
+                                "name": "Cotisations sociales sur les revenus du capital",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            243,
+                                            166,
+                                            171
+                                        ],
+                                        "short_name": "Pr. s. cap.",
+                                        "code": "prelsoc_cap",
+                                        "name": "Prélèvement social sur les revenus du capital",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Pr. s. foncier",
+                                                "code": "prelsoc_fon",
+                                                "name": "Prélèvement social sur les revenus fonciers",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Prel. soc. p.-v. mo.",
+                                                "code": "prelsoc_pv_mo",
+                                                "name": "Prélèvement social sur les plus-values de cessions de valeurs mobilières",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Prel. soc. p.-v.",
+                                                "code": "prelsoc_pv_immo",
+                                                "name": "Prélèvement social sur les plus-values immobilières",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Pr. s. cap. bar.",
+                                                "code": "prelsoc_cap_bar",
+                                                "name": "Prélèvement social sur les revenus du capital soumis au barème",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    243,
+                                                    166,
+                                                    171
+                                                ],
+                                                "short_name": "Prel. soc. lib.",
+                                                "code": "prelsoc_cap_lib",
+                                                "name": "Prélèvement social sur les revenus du capital soumis au prélèvement libératoire",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            235,
+                                            114,
+                                            118
+                                        ],
+                                        "short_name": "CSG cap.",
+                                        "code": "csg_cap",
+                                        "name": "CSG des revenus du capital",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG foncier",
+                                                "code": "csg_fon",
+                                                "name": "CSG (revenus fonciers)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG p.-v. mo.",
+                                                "code": "csg_pv_mo",
+                                                "name": "CSG (plus-values de cessions de valeurs mobilières)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG p.-v. immo.",
+                                                "code": "csg_pv_immo",
+                                                "name": "CSG (plus-values immobilières)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG cap. bar.",
+                                                "code": "csg_cap_bar",
+                                                "name": "CSG (revenus du capital au barème)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    235,
+                                                    114,
+                                                    118
+                                                ],
+                                                "short_name": "CSG cap. lib.",
+                                                "code": "csg_cap_lib",
+                                                "name": "CSG (revenus du capital soumis au prélèvement libératoire)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "color": [
+                                            229,
+                                            48,
+                                            56
+                                        ],
+                                        "short_name": "CRDS cap.",
+                                        "code": "crds_cap",
+                                        "name": "CRDS",
+                                        "children": [
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    229,
+                                                    48,
+                                                    56
+                                                ],
+                                                "short_name": "CRDS foncier",
+                                                "code": "crds_fon",
+                                                "name": "CRDS (revenus fonciers)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    229,
+                                                    48,
+                                                    56
+                                                ],
+                                                "short_name": "CRDS p.-v. mo.",
+                                                "code": "crds_pv_mo",
+                                                "name": "CRDS (plus-values de cessions de valeurs mobilières)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    229,
+                                                    48,
+                                                    56
+                                                ],
+                                                "short_name": "CRDS p.-v. immo.",
+                                                "code": "crds_pv_immo",
+                                                "name": "CRDS (plus-values immobilières)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    229,
+                                                    48,
+                                                    56
+                                                ],
+                                                "short_name": "CRDS cap. bar.",
+                                                "code": "crds_cap_bar",
+                                                "name": "CRDS (revenus du capital au barème)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            },
+                                            {
+                                                "@type": "Node",
+                                                "color": [
+                                                    229,
+                                                    48,
+                                                    56
+                                                ],
+                                                "short_name": "CRDS cap. lib.",
+                                                "code": "crds_cap_lib",
+                                                "name": "CRDS (revenus du capital soumis au prélèvement libératoire)",
+                                                "values": [
+                                                    0
+                                                ]
+                                            }
+                                        ],
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    232,
+                                    79,
+                                    95
+                                ],
+                                "short_name": "Prél. libérat.",
+                                "code": "imp_lib",
+                                "name": "Prélèvement libératoire sur les revenus du patrimoine",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            0
+                        ]
+                    }
+                ],
+                "comment": "TODO: change color",
+                "values": [
+                    67550.32211303711
+                ]
+            },
+            {
+                "@type": "Node",
+                "color": [
+                    232,
+                    79,
+                    95
+                ],
+                "short_name": "IR (LPS)",
+                "code": "ir_lps",
+                "name": "Impôt sur le revenu (Landais, Piketty, Saez)",
+                "values": [
+                    0
+                ]
+            },
+            {
+                "@type": "Node",
+                "color": [
+                    255,
+                    102,
+                    63
+                ],
+                "short_name": "Prest. soc.",
+                "code": "psoc",
+                "name": "Prestations sociales",
+                "children": [
+                    {
+                        "@type": "Node",
+                        "color": [
+                            83,
+                            170,
+                            49
+                        ],
+                        "short_name": "Prest. fam.",
+                        "code": "pfam",
+                        "name": "Prestations familiales",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    181,
+                                    213,
+                                    154
+                                ],
+                                "short_name": "Alloc. fam.",
+                                "code": "af",
+                                "name": "Allocations familiales",
+                                "values": [
+                                    1532.1600341796875
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    125,
+                                    185,
+                                    86
+                                ],
+                                "short_name": "Compl. fam.",
+                                "code": "cf",
+                                "name": "Complément familial",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    91,
+                                    172,
+                                    38
+                                ],
+                                "short_name": "ARS",
+                                "code": "ars",
+                                "name": "Allocation de rentrée scolaire",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    80,
+                                    160,
+                                    38
+                                ],
+                                "short_name": "AEEH",
+                                "code": "aeeh",
+                                "name": "Allocation d'éducation de l'enfant handicapé",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    77,
+                                    144,
+                                    34
+                                ],
+                                "short_name": "PAJE",
+                                "code": "paje",
+                                "name": "Prestation d'accueil du jeune enfant",
+                                "children": [
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "PAJE",
+                                        "code": "paje_base",
+                                        "name": "Paje - Allocation de base",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "Prime naiss.",
+                                        "code": "paje_nais",
+                                        "name": "Paje - Prime de naissance",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "CLCA",
+                                        "code": "paje_clca",
+                                        "name": "Paje - Complément de libre choix d'activité",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "COLCA",
+                                        "code": "paje_colca",
+                                        "name": "Paje - Complément optionnel de libre choix d'activité",
+                                        "values": [
+                                            0
+                                        ]
+                                    },
+                                    {
+                                        "@type": "Node",
+                                        "short_name": "CLCMG",
+                                        "code": "paje_clmg",
+                                        "name": "Paje - Complément de libre choix du mode de garde",
+                                        "values": [
+                                            0
+                                        ]
+                                    }
+                                ],
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    77,
+                                    144,
+                                    34
+                                ],
+                                "short_name": "ASF",
+                                "code": "asf",
+                                "name": "Allocation de soutien familial",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    229,
+                                    48,
+                                    56
+                                ],
+                                "short_name": "CRDS fam.",
+                                "code": "crds_pfam",
+                                "name": "CRDS (prestations familiales)",
+                                "values": [
+                                    -7.660799980163574
+                                ]
+                            }
+                        ],
+                        "values": [
+                            1524.499234199524
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            240,
+                            138,
+                            76
+                        ],
+                        "short_name": "Min. sociaux",
+                        "code": "mini",
+                        "name": "Minima sociaux",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    249,
+                                    193,
+                                    148
+                                ],
+                                "short_name": "ASPA",
+                                "code": "aspa",
+                                "name": "Allocation de solidarité aux personnes agées",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    244,
+                                    160,
+                                    80
+                                ],
+                                "short_name": "AAH",
+                                "code": "aah",
+                                "name": "Allocation adulte handicapé",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    244,
+                                    160,
+                                    80
+                                ],
+                                "short_name": "CAAH",
+                                "code": "caah",
+                                "name": "Complément de l'allocation adulte handicapé",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    244,
+                                    160,
+                                    80
+                                ],
+                                "short_name": "ASI",
+                                "code": "asi",
+                                "name": "Allocation supplémentaire d'invalidité",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    239,
+                                    130,
+                                    19
+                                ],
+                                "short_name": "RSA",
+                                "code": "rsa",
+                                "name": "Revenu de solidarité active",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    239,
+                                    130,
+                                    19
+                                ],
+                                "short_name": "PSA",
+                                "code": "psa",
+                                "name": "Prime de solidarité active",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    237,
+                                    119,
+                                    3
+                                ],
+                                "short_name": "AEFA",
+                                "code": "aefa",
+                                "name": "Aide exceptionelle de fin d'année",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    208,
+                                    112,
+                                    4
+                                ],
+                                "short_name": "API",
+                                "code": "api",
+                                "name": "Allocation parent isolé",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            0
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            255,
+                            222,
+                            48
+                        ],
+                        "short_name": "Prest. logement",
+                        "code": "logt",
+                        "name": "Prestations logement",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    255,
+                                    245,
+                                    155
+                                ],
+                                "short_name": "APL",
+                                "code": "apl",
+                                "name": "Aide personalisée au logement",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    255,
+                                    239,
+                                    103
+                                ],
+                                "short_name": "ALS",
+                                "code": "als",
+                                "name": "Allocation logement social",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    255,
+                                    233,
+                                    28
+                                ],
+                                "short_name": "ALF",
+                                "code": "alf",
+                                "name": "Allocation de logement familiale",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    247,
+                                    221,
+                                    0
+                                ],
+                                "short_name": "AL étudiant",
+                                "code": "alset",
+                                "name": "Allocation logement étudiant",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    229,
+                                    48,
+                                    56
+                                ],
+                                "short_name": "CRDS log.",
+                                "code": "crds_lgtm",
+                                "name": "CRDS (allocation logement)",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            0
+                        ]
+                    }
+                ],
+                "values": [
+                    1524.499234199524
+                ]
+            },
+            {
+                "@type": "Node",
+                "color": [
+                    182,
+                    34,
+                    131
+                ],
+                "short_name": "PPE",
+                "code": "ppe",
+                "name": "Prime pour l'emploi",
+                "values": [
+                    0
+                ]
+            },
+            {
+                "@type": "Node",
+                "color": [
+                    232,
+                    79,
+                    95
+                ],
+                "short_name": "Impôts directs",
+                "code": "impo",
+                "name": "Impôts directs",
+                "children": [
+                    {
+                        "@type": "Node",
+                        "color": [
+                            232,
+                            79,
+                            95
+                        ],
+                        "short_name": "IRPP",
+                        "code": "irpp",
+                        "name": "Impôt sur le revenu",
+                        "values": [
+                            -3420.639892578125
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            232,
+                            79,
+                            95
+                        ],
+                        "short_name": "IR immo.",
+                        "code": "ir_pv_immo",
+                        "name": "Impôt sur le revenu afférent à la plus-value immobilière",
+                        "values": [
+                            0
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            182,
+                            34,
+                            131
+                        ],
+                        "short_name": "ISF net",
+                        "code": "isf net",
+                        "name": "ISF net",
+                        "children": [
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    232,
+                                    79,
+                                    95
+                                ],
+                                "short_name": "ISF",
+                                "code": "isf_tot",
+                                "name": "Impôt de solidarité sur la fortune",
+                                "values": [
+                                    0
+                                ]
+                            },
+                            {
+                                "@type": "Node",
+                                "color": [
+                                    182,
+                                    34,
+                                    131
+                                ],
+                                "short_name": "Bouclier fiscal",
+                                "code": "bouclier_fiscal",
+                                "name": "Bouclier fiscal",
+                                "values": [
+                                    0
+                                ]
+                            }
+                        ],
+                        "values": [
+                            0
+                        ]
+                    },
+                    {
+                        "@type": "Node",
+                        "color": [
+                            232,
+                            79,
+                            95
+                        ],
+                        "short_name": "TH",
+                        "code": "tax_hab",
+                        "name": "Taxe d'habitation",
+                        "values": [
+                            0
+                        ]
+                    }
+                ],
+                "values": [
+                    -3420.639892578125
+                ]
+            }
+        ],
+        "comment": "TODO: missing indemnite_residence and sft",
+        "values": [
+            65654.18145465851
+        ]
+    }
+}
