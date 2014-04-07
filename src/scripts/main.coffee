@@ -28,7 +28,7 @@ svg = d3.select 'body'
 	.attr 'width', width
 	.attr 'height', height
 	.append 'g'
-	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2 + 10) + ')'
+	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2) + ')'
 partition = d3.layout.partition()
 	.value (d) -> 
 		console.log '[Old] ' + d.name + ' : ' + d.values[0]
