@@ -1,6 +1,8 @@
 # VARIABLES
 width = 700
 height = 700
+widthRoot = width / 2.63 # random, should be optimized
+heightRoot = height / 2.63
 radius = Math.min(width, height) / 2
 x = d3.scale.linear()
 	.range [0, 2 * Math.PI]
@@ -123,6 +125,8 @@ d3.json 'data/example.json', (error, root) ->
 	path = svg.selectAll 'path'
 		.data partition.nodes data
 		.enter()
+		.append 'g'
+		.attr 'class', (d) -> classes.getLevel(d.depth)
 		.append 'path'
 		.attr 'data-name', (d) -> d.name
 		.attr 'data-value', (d) -> Math.round d.values[0]
@@ -133,6 +137,29 @@ d3.json 'data/example.json', (error, root) ->
 		.on 'mouseover', tooltip.show
 		.on 'mousemove', tooltip.update
 		.on 'mouseout', tooltip.hide
+		.each (d) ->
+			if d.depth is 0
+				d3.select '.root'
+					.append 'foreignObject'
+					.attr 'x', widthRoot / 2 * -1
+					.attr 'y', widthRoot / 2 * -1
+					.attr 'width', widthRoot
+					.attr 'height', heightRoot
+					.append 'xhtml:div'
+					.attr 'class', 'circle-text'
+					.style 'width', widthRoot + 'px'
+					.style 'height', widthRoot + 'px'
+					.append 'div'
+					.attr 'class', 'circle-text--label'
+					.each (d) ->
+						d3.select this
+							.append 'h1'
+							.attr 'class', 'circle-text--label'
+							.text (d) -> d.name
+						d3.select this
+							.append 'p'
+							.attr 'class', 'circle-text--value number'
+							.text (d) -> d.value.toLocaleString('fr') + ' €'
 	return
 
 
