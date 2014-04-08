@@ -33,7 +33,7 @@
   showTooltip = function(d) {
     tooltip.transition().duration(300).style('opacity', 1);
     tooltip.select('#tooltip--label').text(d.name);
-    return tooltip.select('#tooltip--value').text(d.value + ' €');
+    return tooltip.select('#tooltip--value').text(d.value.toLocaleString('fr') + ' €');
   };
 
   updateTooltip = function() {

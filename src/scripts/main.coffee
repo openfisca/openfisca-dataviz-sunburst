@@ -25,7 +25,7 @@ showTooltip = (d) ->
 	tooltip.select('#tooltip--label')
 		.text d.name
 	tooltip.select('#tooltip--value')
-		.text d.value + ' €'
+		.text d.value.toLocaleString('fr') + ' €'
 
 updateTooltip = () ->
 	console.log d3.event
