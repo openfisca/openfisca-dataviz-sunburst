@@ -81,22 +81,43 @@
   });
 
   d3.json('data/example.json', function(error, root) {
-    var onClick, path;
+    var getDepth, getPosNeg, onClick, path;
     root = root.value;
     console.log(root);
     onClick = function(d) {
       return path.transition().duration(750).attrTween('d', arcTween(d));
+    };
+    getDepth = function(d) {
+      switch (d.depth) {
+        case 0:
+          return "root";
+        case 1:
+          return "levelone";
+        case 2:
+          return "leveltwo";
+        case 3:
+          return "levelthree";
+        case 4:
+          return "levelfour";
+        case 5:
+          return "levelfive";
+        case 6:
+          return "levelsix";
+      }
+    };
+    getPosNeg = function(d) {
+      if (d.values[0] > 0) {
+        return 'positive';
+      } else {
+        return 'negative';
+      }
     };
     path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('data-name', function(d) {
       return d.name;
     }).attr('data-value', function(d) {
       return Math.round(d.values[0]);
     }).attr('class', function(d) {
-      if (d.values[0] > 0) {
-        return 'positive';
-      } else {
-        return 'negative';
-      }
+      return getDepth(d) + ' ' + getPosNeg(d);
     }).attr('d', arc).style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
     }).on('click', onClick).on('mouseover', showTooltip).on('mousemove', updateTooltip);
