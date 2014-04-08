@@ -38,7 +38,7 @@
 
   updateTooltip = function() {
     console.log(d3.event);
-    tooltip.style('top', d3.event.pageY - (tooltipH + 10) + 'px');
+    tooltip.style('top', d3.event.pageY - (tooltipH + 2) + 'px');
     return tooltip.style('left', (d3.event.pageX - tooltipW / 2) + 'px');
   };
 
@@ -99,7 +99,7 @@
       }
     }).attr('d', arc).style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
-    }).on('click', onClick).on('mouseover', showTooltip).on('mousemove', updateTooltip);
+    }).on('click', onClick).on('mouseover', showTooltip).on('mousemove', updateTooltip).on('mouseout', hideTooltip);
   });
 
   d3.select(self.frameElement).style('height', height + 'px');

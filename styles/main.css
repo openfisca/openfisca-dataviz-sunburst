@@ -21,12 +21,38 @@ i { text-align: left; text-indent: -9999px; overflow: hidden; }
 .clear { clear: both; }
 .number { font-family: 'Poiret One', cursive; }
 
-svg { position: absolute; left: 0; top: 0; bottom: 0; right: 0; margin: auto; }
+svg { margin: 20px auto; display: block; }
 
 path {
   stroke: #fff;
   fill-rule: evenodd; }
 
+/*********************/
+/* @group Breadcrumb */
+/*********************/
+
+#breadcrumb ul {
+	margin: 60px 0 0;
+	border-top: 2px solid #fff;
+	min-height: 100px; }
+#breadcrumb ul li {
+	position: relative;
+	text-align: center;
+	min-width: 200px;
+	top: -10px;
+	display: inline-block; }
+#breadcrumb span.breadcrumb--value {
+	display: block;
+	margin: 0 auto;
+	background: #de5a71;
+	border-radius: 100%;
+	border: 4px solid #eee;
+	width: 12px; height: 12px; }
+#breadcrumb h2.breadcrumb--label {
+	font-size: 1.125em;
+	color: #909090;
+	margin: 25px 0; }
+/* @end of Breadcrumb */
 
 /******************/
 /* @group Tooltip */
@@ -71,4 +97,4 @@ div#tooltip a#tooltip--find-out-more {
 	display: block;
 	margin: 20px auto 15px;
 	font-size: 0.938em; }
-/* @end of Main */
+/* @end of Main 

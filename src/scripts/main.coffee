@@ -29,7 +29,7 @@ showTooltip = (d) ->
 
 updateTooltip = () ->
 	console.log d3.event
-	tooltip.style 'top', d3.event.pageY - (tooltipH + 10)  + 'px'
+	tooltip.style 'top', d3.event.pageY - (tooltipH + 2)  + 'px'
 	tooltip.style 'left', (d3.event.pageX - tooltipW / 2) + 'px'
 
 hideTooltip = () ->
@@ -90,7 +90,7 @@ d3.json 'data/example.json', (error, root) ->
 		.on 'click', onClick
 		.on 'mouseover', showTooltip
 		.on 'mousemove', updateTooltip
-		# .on 'mouseout', hideTooltip
+		.on 'mouseout', hideTooltip
 
 	return
 
