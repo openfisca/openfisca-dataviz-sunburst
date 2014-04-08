@@ -43,7 +43,7 @@
   showTooltip = function(d) {
     tooltip.transition().duration(300).style('opacity', 1);
     tooltip.select('.tooltip--label').text(d.name);
-    return tooltip.select('.tooltip--value').text(d.value.toLocaleString('fr') + ' €');
+    return tooltip.select('.tooltip--value').text(d.values[0].toLocaleString('fr') + ' €');
   };
 
   updateTooltip = function() {
@@ -75,8 +75,7 @@
   svg = d3.select('body').append('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')');
 
   partition = d3.layout.partition().value(function(d) {
-    d.values[0] = Math.abs(Math.round(d.values[0]));
-    return d.values[0];
+    return Math.abs(Math.round(d.values[0]));
   });
 
   arc = d3.svg.arc().startAngle(function(d) {
@@ -101,8 +100,7 @@
     scale = d3.scale.linear().domain([d3.min(values), d3.max(values)]).rangeRound([0, 9]);
     onClick = function(d) {
       updateBreadcrumb(d);
-      console.log(d);
-      return d.attr('class', path.transition()).duration(750).attrTween('d', arcTween(d));
+      return path.transition().duration(750).attrTween('d', arcTween(d));
     };
     getDepth = function(d) {
       switch (d.depth) {

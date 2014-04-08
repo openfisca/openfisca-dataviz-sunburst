@@ -40,7 +40,7 @@ showTooltip = (d) ->
 	tooltip.select('.tooltip--label')
 		.text d.name
 	tooltip.select('.tooltip--value')
-		.text d.value.toLocaleString('fr') + ' €'
+		.text d.values[0].toLocaleString('fr') + ' €'
 
 updateTooltip = () ->
 	tooltip.style 'top', d3.event.pageY - (tooltipH + 2)  + 'px'
@@ -88,9 +88,8 @@ svg = d3.select 'body'
 partition = d3.layout.partition()
 	.value (d) -> 
 		# console.log '[Old] ' + d.name + ' : ' + d.values[0]
-		d.values[0] = Math.abs Math.round d.values[0]
 		# console.log '[New] ' + d.name + ' : ' + d.values[0]
-		d.values[0] 
+		Math.abs Math.round d.values[0] 
 arc = d3.svg.arc()
 	.startAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x))
 	.endAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x + d.dx))
@@ -114,9 +113,7 @@ d3.json 'data/example.json', (error, root) ->
 		.rangeRound [0, 9]
 
 	onClick = (d) ->
-		updateBreadcrumb(d)
-		console.log d
-		d.attr 'class', 
+		updateBreadcrumb(d) 
 		path.transition()
 			.duration 750
 			.attrTween 'd', arcTween(d)
