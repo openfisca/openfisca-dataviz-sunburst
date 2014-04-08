@@ -11,24 +11,38 @@ arcTween = (d) ->
       arc d
     )
 
+breadcrumb = d3.select '#breadcrumb'
+updateBreadcrumb = (d) ->
+	console.log d.name
+	name = d.name
+	breadcrumb.select 'ul'
+		.append 'li'
+			.each (d) ->
+				d3.select this
+					.append 'span'
+					.attr 'class', 'breadcrumb--value'
+				d3.select this
+					.append 'h2'
+					.attr 'class', 'breadcrumb--label'
+					.text name
+
 # Tooltip element
-tooltip = d3.select '#tooltip'
+tooltip = d3.select '.tooltip'
 tooltipW = tooltip[0][0].scrollWidth
 tooltipH = tooltip[0][0].scrollHeight
-console.log tooltip, tooltipW
+# console.log tooltip, tooltipW
 # Tooltip functions
 showTooltip = (d) ->
 	tooltip.transition()
 		.duration 300
 		.style 'opacity', 1
 	# Update the content
-	tooltip.select('#tooltip--label')
+	tooltip.select('.tooltip--label')
 		.text d.name
-	tooltip.select('#tooltip--value')
+	tooltip.select('.tooltip--value')
 		.text d.value.toLocaleString('fr') + ' €'
 
 updateTooltip = () ->
-	console.log d3.event
 	tooltip.style 'top', d3.event.pageY - (tooltipH + 2)  + 'px'
 	tooltip.style 'left', (d3.event.pageX - tooltipW / 2) + 'px'
 
@@ -36,6 +50,20 @@ hideTooltip = () ->
 	tooltip.transition()
 		.duration 300
 		.style 'opacity', 1e-6
+
+# showTooltip = (d) ->
+# 	tooltip = d3.select this
+# 		.select '.tooltip'
+
+# 	tooltip.transition()
+# 		.duration 300
+# 		.style 'opacity', 1
+
+# updateTooltip = () ->
+# 	tooltip = d3.select this
+# 		.select '.tooltip'
+# 	tooltip.style 'top', d3.event.pageY - (220 + 2)  + 'px'
+# 	tooltip.style 'left', (d3.event.pageX - 340 / 2) + 'px'
 
 
 colors = 
@@ -72,7 +100,23 @@ arc = d3.svg.arc()
 d3.json 'data/example.json', (error, root) ->
 	root = root.value
 	console.log root
+	# scale = d3.scale.linear()
+	# max = d3.max root, (d) ->
+	# 	return d[0]
+	# console.log max
+	values = []
+	allValues = partition.nodes root
+	allValues.forEach (d, i) ->
+		values.push(d.value)
+
+	scale = d3.scale.linear()
+		.domain [d3.min(values), d3.max(values)]
+		.rangeRound [0, 9]
+
 	onClick = (d) ->
+		updateBreadcrumb(d)
+		console.log d
+		d.attr 'class', 
 		path.transition()
 			.duration 750
 			.attrTween 'd', arcTween(d)
@@ -80,12 +124,12 @@ d3.json 'data/example.json', (error, root) ->
 	getDepth = (d) ->
 		switch d.depth
 			when 0 then "root"
-			when 1 then "levelone"
-			when 2 then "leveltwo"
-			when 3 then "levelthree"
-			when 4 then "levelfour"
-			when 5 then "levelfive"
-			when 6 then "levelsix"
+			when 1 then "level-one"
+			when 2 then "level-two"
+			when 3 then "level-three"
+			when 4 then "level-four"
+			when 5 then "level-five"
+			when 6 then "level-six"
 
 	getPosNeg = (d) ->
 		if d.values[0] > 0 then 'positive' else 'negative'
@@ -98,13 +142,35 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'data-value', (d) -> Math.round d.values[0]
 		.attr 'class', (d) -> getDepth(d) + ' ' + getPosNeg(d)
 		.attr 'd', arc
-		.style 'fill', (d) -> 
-			color (if d.children then d else d.parent).name
+		.style 'fill', (d) ->
+			if d.values[0] < 0 then colors.negative[scale(d.values[0])]
+			else colors.positive[scale(d.values[0])]
+		# .style 'fill', (d) -> 
+		# 	color (if d.children then d else d.parent).name
 		.on 'click', onClick
 		.on 'mouseover', showTooltip
 		.on 'mousemove', updateTooltip
 		.on 'mouseout', hideTooltip
-
+		# .append 'foreignObject'
+		# .attr 'width', '340'
+		# .attr 'height', '220'
+		# 	.attr 'class', 'tooltip'
+		# 	.each (d) ->
+		# 		d3.select this 
+		# 			.append 'h2'
+		# 			.attr 'class', 'tooltip--label'
+		# 			.text (d) -> d.name
+		# 		d3.select this
+		# 			.append 'p'
+		# 			.attr 'class', 'tooltip--value'
+		# 			.text (d) -> d.value.toLocaleString('fr') + ' €'
+		# 		d3.select this 
+		# 			.append 'hr'
+		# 		d3.select this
+		# 			.append 'a'
+		# 			# .attr 'href', '#'
+		# 			.text (d) -> 'En savoir plus'
+		# 	# end of .each
 	return
 
 
