@@ -12,10 +12,10 @@ arcTween = (d) ->
     )
 
 # Tooltip element
-tooltip = d3.select('#tooltip')
-tooltipW = tooltip[0][0].scrollWidth;
+tooltip = d3.select '#tooltip'
+tooltipW = tooltip[0][0].scrollWidth
 tooltipH = tooltip[0][0].scrollHeight
-
+console.log tooltip, tooltipW
 # Tooltip functions
 showTooltip = (d) ->
 	tooltip.transition()
@@ -28,7 +28,8 @@ showTooltip = (d) ->
 		.text d.value + ' €'
 
 updateTooltip = () ->
-	tooltip.style 'top', d3.event.pageY - tooltipH  + 'px'
+	console.log d3.event
+	tooltip.style 'top', d3.event.pageY - (tooltipH + 10)  + 'px'
 	tooltip.style 'left', (d3.event.pageX - tooltipW / 2) + 'px'
 
 hideTooltip = () ->
@@ -58,9 +59,9 @@ svg = d3.select 'body'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2) + ')'
 partition = d3.layout.partition()
 	.value (d) -> 
-		console.log '[Old] ' + d.name + ' : ' + d.values[0]
+		# console.log '[Old] ' + d.name + ' : ' + d.values[0]
 		d.values[0] = Math.abs Math.round d.values[0]
-		console.log '[New] ' + d.name + ' : ' + d.values[0]
+		# console.log '[New] ' + d.name + ' : ' + d.values[0]
 		d.values[0] 
 arc = d3.svg.arc()
 	.startAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x))
@@ -72,7 +73,6 @@ d3.json 'data/example.json', (error, root) ->
 	root = root.value
 	console.log root
 	onClick = (d) ->
-		console.log('hey');
 		path.transition()
 			.duration 750
 			.attrTween 'd', arcTween(d)
@@ -87,10 +87,10 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name
+		.on 'click', onClick
 		.on 'mouseover', showTooltip
 		.on 'mousemove', updateTooltip
-		.on 'mouseout', hideTooltip
-		.on 'click', onClick
+		# .on 'mouseout', hideTooltip
 
 	return
 

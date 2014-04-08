@@ -28,6 +28,8 @@
 
   tooltipH = tooltip[0][0].scrollHeight;
 
+  console.log(tooltip, tooltipW);
+
   showTooltip = function(d) {
     tooltip.transition().duration(300).style('opacity', 1);
     tooltip.select('#tooltip--label').text(d.name);
@@ -35,7 +37,8 @@
   };
 
   updateTooltip = function() {
-    tooltip.style('top', d3.event.pageY - tooltipH + 'px');
+    console.log(d3.event);
+    tooltip.style('top', d3.event.pageY - (tooltipH + 10) + 'px');
     return tooltip.style('left', (d3.event.pageX - tooltipW / 2) + 'px');
   };
 
@@ -63,9 +66,7 @@
   svg = d3.select('body').append('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')');
 
   partition = d3.layout.partition().value(function(d) {
-    console.log('[Old] ' + d.name + ' : ' + d.values[0]);
     d.values[0] = Math.abs(Math.round(d.values[0]));
-    console.log('[New] ' + d.name + ' : ' + d.values[0]);
     return d.values[0];
   });
 
@@ -84,7 +85,6 @@
     root = root.value;
     console.log(root);
     onClick = function(d) {
-      console.log('hey');
       return path.transition().duration(750).attrTween('d', arcTween(d));
     };
     path = svg.selectAll('path').data(partition.nodes(root)).enter().append('path').attr('data-name', function(d) {
@@ -99,7 +99,7 @@
       }
     }).attr('d', arc).style('fill', function(d) {
       return color((d.children ? d : d.parent).name);
-    }).on('mouseover', showTooltip).on('mousemove', updateTooltip).on('mouseout', hideTooltip).on('click', onClick);
+    }).on('click', onClick).on('mouseover', showTooltip).on('mousemove', updateTooltip);
   });
 
   d3.select(self.frameElement).style('height', height + 'px');

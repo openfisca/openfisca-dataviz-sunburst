@@ -42,9 +42,9 @@ div#tooltip {
 	z-index: 100;
 	transition: opacity 0.3s ease-out;
 	border: 1px solid transparent; }
-div#tooltip.visible {
+/*div#tooltip.visible {
 	opacity: 1;
-	z-index: 100; }
+	z-index: 100; }*/
 div#tooltip:after {
 	content: '';
 	display: block;
