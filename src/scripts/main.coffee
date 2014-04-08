@@ -8,8 +8,7 @@ arcTween = (d) ->
      else (t) ->
       x.domain xd(t)
       y.domain(yd(t)).range yr(t)
-      arc d
-    )
+      arc d)
 
 breadcrumb = d3.select '#breadcrumb'
 updateBreadcrumb = (d) ->
@@ -30,7 +29,6 @@ updateBreadcrumb = (d) ->
 tooltip = d3.select '.tooltip'
 tooltipW = tooltip[0][0].scrollWidth
 tooltipH = tooltip[0][0].scrollHeight
-# console.log tooltip, tooltipW
 # Tooltip functions
 showTooltip = (d) ->
 	tooltip.transition()
@@ -103,14 +101,21 @@ d3.json 'data/example.json', (error, root) ->
 	# max = d3.max root, (d) ->
 	# 	return d[0]
 	# console.log max
-	values = []
+	values = 
+		negative: []
+		positive: []
+
 	allValues = partition.nodes root
 	allValues.forEach (d, i) ->
-		values.push(d.value)
+		if d.values[0] < 0 then values.negative.push(d.values[0])
+		else if d.values[0] != 0 then values.positive.push(d.values[0])
 
-	scale = d3.scale.linear()
-		.domain [d3.min(values), d3.max(values)]
-		.rangeRound [0, 9]
+	# allValues.forEach (d, i) ->
+	# 	values.push(d.values[0])
+
+	scale = 
+		negative: d3.scale.linear().domain([d3.max(values.negative), d3.min(values.negative)]).rangeRound([0, 9])
+		positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
 
 	onClick = (d) ->
 		updateBreadcrumb(d) 
@@ -140,8 +145,8 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'class', (d) -> getDepth(d) + ' ' + getPosNeg(d)
 		.attr 'd', arc
 		.style 'fill', (d) ->
-			if d.values[0] < 0 then colors.negative[scale(d.values[0])]
-			else colors.positive[scale(d.values[0])]
+			if d.values[0] < 0 then colors.negative[scale.negative(d.values[0])]
+			else colors.positive[scale.positive(d.values[0])]
 		# .style 'fill', (d) -> 
 		# 	color (if d.children then d else d.parent).name
 		.on 'click', onClick

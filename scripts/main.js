@@ -92,12 +92,22 @@
     var allValues, getDepth, getPosNeg, onClick, path, scale, values;
     root = root.value;
     console.log(root);
-    values = [];
+    values = {
+      negative: [],
+      positive: []
+    };
     allValues = partition.nodes(root);
     allValues.forEach(function(d, i) {
-      return values.push(d.value);
+      if (d.values[0] < 0) {
+        return values.negative.push(d.values[0]);
+      } else if (d.values[0] !== 0) {
+        return values.positive.push(d.values[0]);
+      }
     });
-    scale = d3.scale.linear().domain([d3.min(values), d3.max(values)]).rangeRound([0, 9]);
+    scale = {
+      negative: d3.scale.linear().domain([d3.max(values.negative), d3.min(values.negative)]).rangeRound([0, 9]),
+      positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
+    };
     onClick = function(d) {
       updateBreadcrumb(d);
       return path.transition().duration(750).attrTween('d', arcTween(d));
@@ -135,9 +145,9 @@
       return getDepth(d) + ' ' + getPosNeg(d);
     }).attr('d', arc).style('fill', function(d) {
       if (d.values[0] < 0) {
-        return colors.negative[scale(d.values[0])];
+        return colors.negative[scale.negative(d.values[0])];
       } else {
-        return colors.positive[scale(d.values[0])];
+        return colors.positive[scale.positive(d.values[0])];
       }
     }).on('click', onClick).on('mouseover', showTooltip).on('mousemove', updateTooltip).on('mouseout', hideTooltip);
   });
