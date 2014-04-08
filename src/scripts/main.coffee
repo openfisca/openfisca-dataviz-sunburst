@@ -25,7 +25,7 @@ showTooltip = (d) ->
 	tooltip.select('#tooltip--label')
 		.text d.name
 	tooltip.select('#tooltip--value')
-		.text d.value + ' €'
+		.text d.value.toLocaleString('fr') + ' €'
 
 updateTooltip = () ->
 	console.log d3.event
@@ -77,13 +77,26 @@ d3.json 'data/example.json', (error, root) ->
 			.duration 750
 			.attrTween 'd', arcTween(d)
 
+	getDepth = (d) ->
+		switch d.depth
+			when 0 then "root"
+			when 1 then "levelone"
+			when 2 then "leveltwo"
+			when 3 then "levelthree"
+			when 4 then "levelfour"
+			when 5 then "levelfive"
+			when 6 then "levelsix"
+
+	getPosNeg = (d) ->
+		if d.values[0] > 0 then 'positive' else 'negative'
+
 	path = svg.selectAll 'path'
 		.data partition.nodes root
 		.enter()
 		.append 'path'
 		.attr 'data-name', (d) -> d.name
 		.attr 'data-value', (d) -> Math.round d.values[0]
-		.attr 'class', (d) -> if d.values[0] > 0 then 'positive' else 'negative'
+		.attr 'class', (d) -> getDepth(d) + ' ' + getPosNeg(d)
 		.attr 'd', arc
 		.style 'fill', (d) -> 
 			color (if d.children then d else d.parent).name
