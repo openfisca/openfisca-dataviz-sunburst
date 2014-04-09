@@ -106,14 +106,27 @@ div.tooltip:after {
 div.tooltip h2.tooltip--label {
 	color: #414454;
 	font-size: 1.125em;
-	margin: 30px auto; }
+	margin: 30px auto 0; }
 div.tooltip hr {
 	background: #eee;
 	height: 1px; width: 100%; }
 div.tooltip p.tooltip--value {
+	display: inline-block;
 	font-size: 2.188em;
 	margin: 40px auto 30px;
-	color: #eb4c56; }
+	color: #eb4c56;
+	background: #eeeeee;
+	border-radius:4px;
+	padding:10px 15px; }
+div.tooltip span {
+	width:20px;
+	height:20px;
+	display: block;
+	background:url('../img/dash.png');
+	position: absolute;
+	right: 24px;
+	bottom: 105px;
+	cursor:pointer; }
 div.tooltip a.tooltip--find-out-more {
 	color: #9f9f9f;
 	display: block;

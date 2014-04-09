@@ -82,7 +82,7 @@
     show: function(d) {
       tooltip.el.transition().duration(300).style('opacity', 1);
       tooltip.el.select('.tooltip--label').text(d.name);
-      return tooltip.el.select('.tooltip--value').text(d.values[0].toLocaleString('fr') + ' €').style('color', colors.getColor(d.values[0]));
+      return tooltip.el.select('.tooltip--value').text(Math.round(d.values[0]).toLocaleString('fr') + ' €').style('color', colors.getColor(d.values[0]));
     },
     update: function() {
       tooltip.el.style('top', d3.event.pageY - (tooltip.height() + 2) + 'px');
@@ -90,6 +90,12 @@
     },
     hide: function() {
       return tooltip.el.transition().duration(300).style('opacity', 1e-6);
+    },
+    tooltipOver: function() {
+      return tooltip.el.style('opacity', 1);
+    },
+    tooltipOut: function() {
+      return tooltip.el.style('opacity', 0);
     }
   };
 
@@ -160,5 +166,7 @@
       }
     });
   });
+
+  d3.select('.tooltip').on('mouseover', tooltip.tooltipOver).on('mouseleave', tooltip.tooltipOut);
 
 }).call(this);

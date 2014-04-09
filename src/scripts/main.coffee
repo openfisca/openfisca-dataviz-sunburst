@@ -72,16 +72,19 @@ tooltip =
 		tooltip.el.select '.tooltip--label'
 			.text d.name
 		tooltip.el.select '.tooltip--value'
-			.text d.values[0].toLocaleString('fr') + ' €'
+			.text Math.round(d.values[0]).toLocaleString('fr') + ' €'
 			.style 'color', colors.getColor(d.values[0]) 
 	update: () ->
-		tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 2)  + 'px'
+		tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 2) + 'px'
 		tooltip.el.style 'left', (d3.event.pageX - tooltip.width() / 2) + 'px'
 	hide: () ->
 		tooltip.el.transition()
 			.duration 300
 			.style 'opacity', 1e-6
-
+	tooltipOver: () ->
+		tooltip.el.style 'opacity', 1
+	tooltipOut: () ->
+		tooltip.el.style 'opacity', 0
 
 arcTween = (d) ->
 	xd = d3.interpolate x.domain(), [d.x, d.x + d.dx]
@@ -161,6 +164,14 @@ d3.json 'data/example.json', (error, root) ->
 							.attr 'class', 'circle-text--value number'
 							.text (d) -> d.value.toLocaleString('fr') + ' €'
 	return
+
+
+# Usage
+
+d3.select '.tooltip'
+	.on 'mouseover', tooltip.tooltipOver
+	.on 'mouseleave', tooltip.tooltipOut
+
 
 
 # d3.select self.frameElement
