@@ -116,12 +116,18 @@ arcTween = (d) ->
 
 zoomIn = (d) ->
 	breadcrumb.update breadcrumb.getAncestors(d)
-	d3.select '.circle-content'
-		.style 'display', 'none'
 	path.transition()
 		.duration 750
 		.attrTween 'd', arcTween(d)
-
+	# hide/unhide root label
+	d3.select '.circle-content'
+		.style 'opacity', 0
+		.style 'display', 'none'
+	zoomLevel = breadcrumb.getAncestors(d)
+	if zoomLevel.length == 0
+		d3.select '.circle-content'
+		.style 'opacity', 1
+		.style 'display', 'block'
 
 # API
 d3.json 'data/example.json', (error, root) ->
