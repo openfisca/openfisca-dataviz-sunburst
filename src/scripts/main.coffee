@@ -70,7 +70,6 @@ breadcrumb =
 		while current.parent
 			steps.unshift current.parent # unshift -> beginning of the array != push()
 			current = current.parent
-		console.log steps
 		steps
 
 
@@ -95,9 +94,9 @@ tooltip =
 		tooltip.el.transition()
 			.duration 300
 			.style 'opacity', 1e-6
-	tooltipOver: () ->
+	onMouseover: () ->
 		tooltip.el.style 'opacity', 1
-	tooltipOut: () ->
+	onMouseout: () ->
 		tooltip.el.style 'opacity', 0
 
 arcTween = (d) ->
@@ -182,11 +181,9 @@ d3.json 'data/example.json', (error, root) ->
 
 
 # Usage
-
-d3.select '.tooltip'
-	.on 'mouseover', tooltip.tooltipOver
-	.on 'mouseleave', tooltip.tooltipOut
-
+tooltip.el
+	.on 'mouseover', tooltip.onMouseover
+	.on 'mouseleave', tooltip.onMouseout
 
 
 # d3.select self.frameElement
