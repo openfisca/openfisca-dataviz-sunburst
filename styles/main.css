@@ -131,4 +131,37 @@ div.tooltip a.tooltip--find-out-more {
 	display: block;
 	margin: 20px auto 15px;
 	font-size: 0.938em; }
+
+/**********************/
+/* @group Family list */
+/**********************/
+
+ul#users{
+	bottom: 0;
+	margin: 45px 0 45px 45px;
+	height: 45px;
+	width: 100%;
+}
+
+ul#users li{
+	float:left;
+	margin-right:22px;
+}
+
+.family{
+	display: block;
+	width: 45px;
+	height: 45px;
+	background-image: url(../images/family-sprite.png);
+	background-repeat: no-repeat;
+	background-size:187px;
+}
+
+.mother{background-position: 1px 0px;}
+.father{background-position: -47px 0;}
+.grandmother{background-position: -94px 0;}
+.grandfather{background-position: -144px 0;}
+.daughter{background-position: 1px -47px;}
+.son{background-position: -47px -47px;}
+
 /* @end of Main 

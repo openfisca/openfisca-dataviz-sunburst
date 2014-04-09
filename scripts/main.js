@@ -138,6 +138,7 @@
 
   zoomIn = function(d) {
     breadcrumb.update(breadcrumb.getAncestors(d));
+    d3.select('.circle-content').style('display', 'none');
     return path.transition().duration(750).attrTween('d', arcTween(d));
   };
 
@@ -172,7 +173,7 @@
       return colors.getColor(d.values[0]);
     }).on('click', zoomIn).on('mouseover', tooltip.show).on('mousemove', tooltip.update).on('mouseout', tooltip.hide).each(function(d) {
       if (d.depth === 0) {
-        return d3.select('.root').append('foreignObject').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'circle-text').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'circle-text--label').each(function(d) {
+        return d3.select('.root').append('foreignObject').attr('class', 'circle-content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'circle-text').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'circle-text--label').each(function(d) {
           d3.select(this).append('h1').attr('class', 'circle-text--label').text(function(d) {
             return d.name;
           });

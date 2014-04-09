@@ -115,6 +115,8 @@ arcTween = (d) ->
 
 zoomIn = (d) ->
 	breadcrumb.update breadcrumb.getAncestors(d)
+	d3.select '.circle-content'
+		.style 'display', 'none'
 	path.transition()
 		.duration 750
 		.attrTween 'd', arcTween(d)
@@ -156,6 +158,7 @@ d3.json 'data/example.json', (error, root) ->
 			if d.depth is 0
 				d3.select '.root'
 					.append 'foreignObject'
+					.attr 'class', 'circle-content'
 					.attr 'x', widthRoot / 2 * -1
 					.attr 'y', widthRoot / 2 * -1
 					.attr 'width', widthRoot
