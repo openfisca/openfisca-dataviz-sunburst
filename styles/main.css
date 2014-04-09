@@ -35,19 +35,15 @@ path {
 	color: #fff;
 	display: flex;
 	align-items: center;
-	text-align: center;
-}
+	text-align: center; }
 
-.circle-text--label {
-	margin: auto;
-}
+.circle-text--label { margin: auto; }
 
 .circle-text h1.circle-text--label { font-size: 1.125em; }
 
 .circle-text p.circle-text--value { 
-	font-size: 2em;
-	padding-top:0.3em;
-}
+	font-size: 3.125em;
+	margin: 20px 0; }
 
 /*********************/
 /* @group Breadcrumb */
@@ -62,7 +58,10 @@ path {
 	text-align: center;
 	min-width: 200px;
 	top: -10px;
+	opacity: 0;
+	transition: opacity 0.3s ease-out;
 	display: inline-block; }
+#breadcrumb ul li.visible { opacity: 1; }
 #breadcrumb span.breadcrumb--value {
 	display: block;
 	margin: 0 auto;
