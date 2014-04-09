@@ -133,9 +133,14 @@
   };
 
   zoomIn = function(d) {
+    var zoomLevel;
     breadcrumb.update(breadcrumb.getAncestors(d));
-    d3.select('.circle-content').style('display', 'none');
-    return path.transition().duration(750).attrTween('d', arcTween(d));
+    path.transition().duration(750).attrTween('d', arcTween(d));
+    d3.select('.circle-content').style('opacity', 0).style('display', 'none');
+    zoomLevel = breadcrumb.getAncestors(d);
+    if (zoomLevel.length === 0) {
+      return d3.select('.circle-content').style('opacity', 1).style('display', 'block');
+    }
   };
 
   d3.json('data/example.json', function(error, root) {
