@@ -114,18 +114,18 @@ div.tooltip p.tooltip--value {
 	font-size: 2.188em;
 	margin: 40px auto 30px;
 	color: #eb4c56;
-	background: #eeeeee;
+	background: transparent;
 	border-radius:4px;
 	padding:10px 15px; }
-div.tooltip span {
-	width:20px;
-	height:20px;
+div.tooltip p.tooltip--value.edit { background: #eeeeee; }
+div.tooltip i.dashboard {
+	width: 20px; height: 20px;
 	display: block;
-	background:url('../img/dash.png');
+	background: url(../images/dashboard.png);
 	position: absolute;
-	right: 24px;
-	bottom: 105px;
-	cursor:pointer; }
+	margin: auto 0;
+	right: 25px; top: 0; bottom: 0;
+	cursor: pointer; }
 div.tooltip a.tooltip--find-out-more {
 	color: #9f9f9f;
 	display: block;
@@ -136,32 +136,29 @@ div.tooltip a.tooltip--find-out-more {
 /* @group Family list */
 /**********************/
 
-ul#users{
+ul#users {
 	bottom: 0;
 	margin: 45px 0 45px 45px;
 	height: 45px;
-	width: 100%;
-}
+	width: 100%; }
 
-ul#users li{
+ul#users li {
 	float:left;
-	margin-right:22px;
-}
+	margin-right:22px; }
 
-.family{
+.family {
 	display: block;
 	width: 45px;
 	height: 45px;
 	background-image: url(../images/family-sprite.png);
 	background-repeat: no-repeat;
-	background-size:187px;
-}
+	background-size:187px; }
 
-.mother{background-position: 1px 0px;}
-.father{background-position: -47px 0;}
-.grandmother{background-position: -94px 0;}
-.grandfather{background-position: -144px 0;}
-.daughter{background-position: 1px -47px;}
-.son{background-position: -47px -47px;}
+.mother { background-position: 1px 0px; }
+.father { background-position: -47px 0; }
+.grandmother { background-position: -94px 0; }
+.grandfather { background-position: -144px 0; }
+.daughter { background-position: 1px -47px; }
+.son { background-position: -47px -47px; }
 
 /* @end of Main 

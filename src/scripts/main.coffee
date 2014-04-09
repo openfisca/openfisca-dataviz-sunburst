@@ -1,4 +1,4 @@
-# VARIABLES
+# CONSTANTS
 width = 700
 height = 700
 widthRoot = width / 2.63 # random, should be optimized
