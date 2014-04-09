@@ -13,7 +13,6 @@
 body {
 	font-family: 'Arvo', serif;
 	font-size: 1em; 
-	position: relative;
 	background: #eee; color: #909090;
   -webkit-font-smoothing: antialiased; }
 hr { border: 0; }
@@ -113,11 +112,10 @@ div#tooltip hr {
 div#tooltip p.tooltip--value {
 	display: inline-block;
 	font-size: 2.188em;
-	margin: 40px auto 30px;
-	color: #eb4c56;
-	background: transparent;
-	border-radius:4px;
-	padding:10px 15px; }
+	margin: 30px auto 20px;
+	background: transparent; color: #eb4c56;
+	border-radius: 4px;
+	padding: 10px 15px; }
 div#tooltip p.tooltip--value.edit { background: #eeeeee; }
 div#tooltip i.dashboard {
 	width: 20px; height: 20px;
