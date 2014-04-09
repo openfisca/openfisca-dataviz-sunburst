@@ -10,8 +10,7 @@ y = d3.scale.sqrt()
 	.range [0, radius]
 
 
-svg = d3.select 'body'
-	.append 'svg'
+svg = d3.select 'svg'
 	.attr 'width', width
 	.attr 'height', height
 	.append 'g'
@@ -47,18 +46,33 @@ classes =
 # BREADCRUMB 
 breadcrumb = 
 	el: d3.select '#breadcrumb'
-	update: (d) ->
+	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
 				.each () ->
 					d3.select this
 						.append 'span'
 						.attr 'class', 'breadcrumb--value'
-						.style 'background', colors.getColor(d.values[0])
+						.style 'background', colors.getColor(node.values[0])
 					d3.select this
 						.append 'h2'
 						.attr 'class', 'breadcrumb--label'
-						.text d.name	
+						.text node.name
+				.attr 'class', 'visible'
+	update: (path) ->
+		@el.select 'ul'
+			.html('')
+		path.forEach (node) ->
+			breadcrumb.create(node)
+	getAncestors: (node) ->
+		steps = []
+		current = node
+		while current.parent
+			steps.unshift current.parent # unshift -> beginning of the array != push()
+			current = current.parent
+		console.log steps
+		steps
+
 
 # TOOLTIP 
 tooltip =
@@ -75,7 +89,7 @@ tooltip =
 			.text Math.round(d.values[0]).toLocaleString('fr') + ' €'
 			.style 'color', colors.getColor(d.values[0]) 
 	update: () ->
-		tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 2) + 'px'
+		tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 5) + 'px'
 		tooltip.el.style 'left', (d3.event.pageX - tooltip.width() / 2) + 'px'
 	hide: () ->
 		tooltip.el.transition()
@@ -99,13 +113,11 @@ arcTween = (d) ->
       arc d)
 
 
-onClick = (d) ->
-	breadcrumb.update(d) 
+zoomIn = (d) ->
+	breadcrumb.update breadcrumb.getAncestors(d)
 	path.transition()
 		.duration 750
 		.attrTween 'd', arcTween(d)
-
-
 
 
 # API
@@ -136,7 +148,7 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
 		.style 'fill', (d) -> colors.getColor(d.values[0])
-		.on 'click', onClick
+		.on 'click', zoomIn
 		.on 'mouseover', tooltip.show
 		.on 'mousemove', tooltip.update
 		.on 'mouseout', tooltip.hide
