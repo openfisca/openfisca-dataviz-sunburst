@@ -88,7 +88,7 @@
   };
 
   tooltip = {
-    el: d3.select('.tooltip'),
+    el: d3.select('#tooltip'),
     width: function() {
       return this.el[0][0].scrollWidth;
     },
@@ -108,10 +108,7 @@
       return tooltip.el.transition().duration(300).style('opacity', 1e-6);
     },
     onMouseover: function() {
-      return tooltip.el.style('opacity', 1);
-    },
-    onMouseout: function() {
-      return tooltip.el.style('opacity', 0);
+      return tooltip.el.transition().duration(300).style('opacity', 1);
     }
   };
 
@@ -184,6 +181,6 @@
     });
   });
 
-  tooltip.el.on('mouseover', tooltip.onMouseover).on('mouseleave', tooltip.onMouseout);
+  tooltip.el.on('mouseover', tooltip.onMouseover).on('mouseleave', tooltip.hide);
 
 }).call(this);
