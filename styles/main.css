@@ -13,6 +13,7 @@
 body {
 	font-family: 'Arvo', serif;
 	font-size: 1em; 
+	position: relative;
 	background: #eee; color: #909090;
   -webkit-font-smoothing: antialiased; }
 hr { border: 0; }
@@ -21,7 +22,7 @@ i { text-align: left; text-indent: -9999px; overflow: hidden; }
 .clear { clear: both; }
 .number { font-family: 'Poiret One', cursive; }
 
-svg { margin: 20px auto; display: block; }
+svg { margin: 20px auto; display: block; width: 700px; height: 700px;}
 
 path {
   stroke: #fff;
@@ -52,7 +53,7 @@ path {
 #breadcrumb ul {
 	margin: 60px 0 0;
 	border-top: 2px solid #fff;
-	min-height: 100px; }
+	min-height: 70px; }
 #breadcrumb ul li {
 	position: relative;
 	text-align: center;
@@ -136,20 +137,12 @@ div.tooltip a.tooltip--find-out-more {
 /* @group Family list */
 /**********************/
 
-ul#users {
-	bottom: 0;
-	margin: 45px 0 45px 45px;
-	height: 45px;
-	width: 100%; }
-
-ul#users li {
-	float:left;
-	margin-right:22px; }
+ul#users { margin: 40px 40px; }
+ul#users li { display: inline-block; margin: 10px; }
 
 .family {
 	display: block;
-	width: 45px;
-	height: 45px;
+	width: 45px; height: 45px;
 	background-image: url(../images/family-sprite.png);
 	background-repeat: no-repeat;
 	background-size:187px; }
