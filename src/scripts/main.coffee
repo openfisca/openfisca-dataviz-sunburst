@@ -80,6 +80,7 @@ tooltip =
 	height: () -> @el[0][0].scrollHeight
 	show: (d) -> 
 		tooltip.el.transition()
+			# .delay 500
 			.duration 300
 			.style 'opacity', 1
 		tooltip.el.select '.tooltip--label'
@@ -157,6 +158,9 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
 		.style 'fill', (d) -> colors.getColor(d.values[0])
+		.style 'opacity', (d) ->
+			if d.parent and d.parent.values[0] == d.values[0] then 1
+			else 1
 		.on 'click', zoomIn
 		.on 'mouseover', tooltip.show
 		.on 'mousemove', tooltip.update
@@ -184,7 +188,7 @@ d3.json 'data/example.json', (error, root) ->
 						d3.select this
 							.append 'p'
 							.attr 'class', 'circle-text--value number'
-							.text (d) -> d.value.toLocaleString('fr') + ' €'
+							.text (d) -> d.values[0].toLocaleString('fr') + ' €'
 	return
 
 

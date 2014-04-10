@@ -172,6 +172,12 @@
       return classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0]);
     }).attr('d', arc).style('fill', function(d) {
       return colors.getColor(d.values[0]);
+    }).style('opacity', function(d) {
+      if (d.parent && d.parent.values[0] === d.values[0]) {
+        return 1;
+      } else {
+        return 1;
+      }
     }).on('click', zoomIn).on('mouseover', tooltip.show).on('mousemove', tooltip.update).on('mouseout', tooltip.hide).each(function(d) {
       if (d.depth === 0) {
         return d3.select('.root').append('foreignObject').attr('class', 'circle-content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'circle-text').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'circle-text--label').each(function(d) {
@@ -179,7 +185,7 @@
             return d.name;
           });
           return d3.select(this).append('p').attr('class', 'circle-text--value number').text(function(d) {
-            return d.value.toLocaleString('fr') + ' €';
+            return d.values[0].toLocaleString('fr') + ' €';
           });
         });
       }
