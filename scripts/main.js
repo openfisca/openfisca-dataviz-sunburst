@@ -20,6 +20,8 @@
 
   partition = d3.layout.partition().value(function(d) {
     return Math.abs(Math.round(d.values[0]));
+  }).sort(function(a, b) {
+    return d3.ascending(a.name, b.name);
   });
 
   arc = d3.svg.arc().startAngle(function(d) {
@@ -170,7 +172,11 @@
       return Math.round(d.values[0]);
     }).attr('class', function(d) {
       return classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0]);
-    }).attr('d', arc).style('fill', function(d) {
+    }).attr('d', arc).style('display', function(d) {
+      if (d.values[0] === 0) {
+        return 'none';
+      }
+    }).style('fill', function(d) {
       return colors.getColor(d.values[0]);
     }).style('opacity', function(d) {
       if (d.parent && d.parent.values[0] === d.values[0]) {

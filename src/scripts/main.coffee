@@ -17,7 +17,8 @@ svg = d3.select 'svg'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2) + ')'
 partition = d3.layout.partition()
 	.value (d) -> 
-		Math.abs Math.round d.values[0] 
+		Math.abs Math.round d.values[0]
+	.sort (a, b) -> return d3.ascending(a.name, b.name) 
 arc = d3.svg.arc()
 	.startAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x))
 	.endAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x + d.dx))
@@ -157,6 +158,7 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'data-value', (d) -> Math.round d.values[0]
 		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
+		.style 'display', (d) -> if d.values[0] == 0 then 'none'
 		.style 'fill', (d) -> colors.getColor(d.values[0])
 		.style 'opacity', (d) ->
 			if d.parent and d.parent.values[0] == d.values[0] then 1
