@@ -9,6 +9,7 @@
 @import url(http://fonts.googleapis.com/css?family=Arvo|Poiret+One);
 /* @end of Fonts */
 
+
 body {
 	font-family: 'Arvo', serif;
 	font-size: 1em; 
@@ -25,8 +26,8 @@ svg { display:inline; margin: 20px 0; display: block; width: 500px; height: 500p
 path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 
 #main { position: relative; float: left; }
-#side { position: relative; float: left; width: 300px; padding: 30px; }
-#side > * { margin-bottom: 20px; }
+#sidebar { position: relative; float: left; width: 300px; padding: 30px; }
+#sidebar > * { margin-bottom: 20px; }
 
 /**********************/
 /* @group Root circle */
@@ -57,7 +58,7 @@ path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 /* @group Tooltip */
 /******************/
 
-div#tooltip {
+#tooltip {
 	position: relative;
 	width: 100%;
 	background: #fff;
@@ -66,22 +67,22 @@ div#tooltip {
 	text-align: center;
 	transition: opacity 0.3s ease-out;
 	padding: 1px 0; }
-div#tooltip h2.tooltip--label {
+#tooltip h2.tooltip--label {
 	color: #414454;
 	font-size: 1.125em;
 	margin: 30px auto 0; }
-div#tooltip hr {
+#tooltip hr {
 	background: #eee;
 	height: 1px; width: 100%; }
-div#tooltip p.tooltip--value {
+#tooltip p.tooltip--value {
 	display: inline-block;
 	font-size: 2.188em;
 	margin: 30px auto 20px;
 	background: transparent; color: #eb4c56;
 	border-radius: 4px;
 	padding: 10px 15px 5px 15px; }
-div#tooltip p.tooltip--value.edit { background: #eeeeee; }
-div#tooltip i.dashboard {
+#tooltip p.tooltip--value.edit { background: #eeeeee; }
+#tooltip i.dashboard {
 	width: 20px; height: 20px;
 	display: block;
 	background: url(../images/dashboard.png);
@@ -89,7 +90,7 @@ div#tooltip i.dashboard {
 	margin: 97px 0 0 10px;
 	right: 20px; top: 0; bottom: 0;
 	cursor: pointer; }
-div#tooltip a.tooltip--find-out-more {
+#tooltip a.tooltip--find-out-more {
 	color: #9f9f9f;
 	display: block;
 	margin: 14px auto 14px;
@@ -141,36 +142,26 @@ ul#users li { display: inline-block; margin: 10px 6px 7px 6px; }
 	transition: opacity 0.3s ease-out;
 	box-sizing: border-box;
 	cursor: pointer; }
-#breadcrumb ul li:after {
-	content: '';
-	display: block;
-	position: absolute;
-	top: 38px;
-	left: 18px;
-	width: 0;
-	height: 0;
-	border-color: transparent transparent transparent #fff;
-	border-style: solid;
-	border-width: 6px;
-	transform: rotate(90deg);
-	-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg); }
+#breadcrumb ul li:after,
 #breadcrumb ul li:before {
 	content: '';
 	display: block;
 	position: absolute;
-	top: 39px;
-	left: 18px;
-	width: 0;
-	height: 0;
-	border-color: transparent transparent transparent #eeeeee;
 	border-style: solid;
+	width: 0; height: 0;
 	border-width: 6px;
-	transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg); }
+		 -moz-transform: rotate(90deg);
+					transform: rotate(90deg); }
+#breadcrumb ul li:after {
+	top: 38px; left: 18px;
+	border-color: transparent transparent transparent #fff; }
+#breadcrumb ul li:before {
+	top: 39px; left: 18px;
+	border-color: transparent transparent transparent #eeeeee; }
 #breadcrumb ul li:last-child { border: none; }
-#breadcrumb ul li:last-child:before, #breadcrumb ul li:last-child:after { display:none; }
+#breadcrumb ul li:last-child:before, 
+#breadcrumb ul li:last-child:after { display:none; }
 #breadcrumb ul li.visible { opacity: 1; }
 #breadcrumb span.breadcrumb--value {
 	position: relative;
@@ -183,9 +174,8 @@ ul#users li { display: inline-block; margin: 10px 6px 7px 6px; }
 	overflow: hidden; }
 #breadcrumb span.breadcrumb--value .reflect {
 	position: relative;
-	left: 8px;
-	width: 8px;
-	height: 16px;
+	left: 8px; top: 0;
+	width: 8px; height: 16px;
 	background-color: rgba(1,1,1,0.1); }
 #breadcrumb h2.breadcrumb--label {
 	display: inline;
@@ -196,7 +186,6 @@ ul#users li { display: inline-block; margin: 10px 6px 7px 6px; }
 /**********************/
 /* @group Date picker */
 /**********************/
-
 #datepicker ul {
 	width: 100%;
 	border-top: 2px solid #fff;
