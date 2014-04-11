@@ -1,6 +1,6 @@
 # CONSTANTS
-width = 700
-height = 700
+width = 500
+height = 500
 widthRoot = width / 2.63 # random, should be optimized
 heightRoot = height / 2.63
 radius = Math.min(width, height) / 2
@@ -55,6 +55,8 @@ breadcrumb =
 						.append 'span'
 						.attr 'class', 'breadcrumb--value'
 						.style 'background', colors.getColor(node.values[0])
+						.append 'div'
+						.attr 'class', 'reflect'
 					d3.select this
 						.append 'h2'
 						.attr 'class', 'breadcrumb--label'
@@ -69,7 +71,7 @@ breadcrumb =
 		steps = []
 		current = node
 		while current.parent
-			steps.unshift current.parent # unshift -> beginning of the array != push()
+			steps.unshift current # unshift -> beginning of the array != push()
 			current = current.parent
 		steps
 
@@ -89,23 +91,24 @@ tooltip =
 		tooltip.el.select '.tooltip--value'
 			.text Math.round(d.values[0]).toLocaleString('fr') + ' €'
 			.style 'color', colors.getColor(d.values[0]) 
-	update: () ->
-		tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 5) + 'px'
-		tooltip.el.style 'left', (d3.event.pageX - tooltip.width() / 2) + 'px'
-	hide: () ->
-		tooltip.el.transition()
-			.duration 300
-			.style 'opacity', 1e-6
-	onMouseover: () ->
-		tooltip.el.transition()
-			.duration 300
-			.style 'opacity', 1
+	# update: () ->
+	# 	tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 5) + 'px'
+	# 	tooltip.el.style 'left', (d3.event.pageX - tooltip.width() / 2) + 'px'
+	# hide: () ->
+	# 	tooltip.el.transition()
+	# 		.duration 300
+	# 		.style 'opacity', 1e-6
+	# onMouseover: () ->
+	# 	tooltip.el.transition()
+	# 		.duration 300
+	# 		.style 'opacity', 1
 	# onMouseout: () ->
 	# 	tooltip.el.style 'opacity', 0
 
 arcTween = (d) ->
 	xd = d3.interpolate x.domain(), [d.x, d.x + d.dx]
 	yd = d3.interpolate y.domain(), [d.y, 1]
+	# yr = d3.interpolate y.range(), [(if d.y then 0 else 0), radius]
 	yr = d3.interpolate y.range(), [(if d.y then 20 else 0), radius]
 	(d, i) ->
     (if i then (t) ->
@@ -122,12 +125,12 @@ zoomIn = (d) ->
 		.duration 750
 		.attrTween 'd', arcTween(d)
 	# hide/unhide root label
-	d3.select '.circle-content'
+	d3.select '.root-circle--content'
 		.style 'opacity', 0
 		.style 'display', 'none'
 	zoomLevel = breadcrumb.getAncestors(d)
 	if zoomLevel.length == 0
-		d3.select '.circle-content'
+		d3.select '.root-circle--content'
 		.style 'opacity', 1
 		.style 'display', 'block'
 
@@ -165,39 +168,42 @@ d3.json 'data/example.json', (error, root) ->
 			else 1
 		.on 'click', zoomIn
 		.on 'mouseover', tooltip.show
-		.on 'mousemove', tooltip.update
-		.on 'mouseout', tooltip.hide
+		# .on 'mousemove', tooltip.update
+		# .on 'mouseout', tooltip.hide
 		.each (d) ->
 			if d.depth is 0
 				d3.select '.root'
 					.append 'foreignObject'
-					.attr 'class', 'circle-content'
+					.attr 'class', 'root-circle--content'
 					.attr 'x', widthRoot / 2 * -1
 					.attr 'y', widthRoot / 2 * -1
 					.attr 'width', widthRoot
 					.attr 'height', heightRoot
 					.append 'xhtml:div'
-					.attr 'class', 'circle-text'
+					.attr 'class', 'root-circle'
 					.style 'width', widthRoot + 'px'
 					.style 'height', widthRoot + 'px'
 					.append 'div'
-					.attr 'class', 'circle-text--label'
+					.attr 'class', 'root-circle--label'
 					.each (d) ->
 						d3.select this
 							.append 'h1'
-							.attr 'class', 'circle-text--label'
+							.attr 'class', 'root-circle--label'
 							.text (d) -> d.name
 						d3.select this
 							.append 'p'
-							.attr 'class', 'circle-text--value number'
-							.text (d) -> d.values[0].toLocaleString('fr') + ' €'
+							.attr 'class', 'root-circle--value number'
+							.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
+						d3.select this
+							.append 'div'
+							.attr 'class', 'return'
 	return
 
 
 # Usage
-tooltip.el
-	.on 'mouseover', tooltip.onMouseover
-	.on 'mouseleave', tooltip.hide
+# tooltip.el
+# 	.on 'mouseover', tooltip.onMouseover
+# 	.on 'mouseleave', tooltip.hide
 
 
 # d3.select self.frameElement

@@ -2,9 +2,9 @@
 (function() {
   var arc, arcTween, breadcrumb, classes, colors, height, heightRoot, partition, path, radius, svg, tooltip, width, widthRoot, x, y, zoomIn;
 
-  width = 700;
+  width = 500;
 
-  height = 700;
+  height = 500;
 
   widthRoot = width / 2.63;
 
@@ -67,7 +67,7 @@
     el: d3.select('#breadcrumb'),
     create: function(node) {
       return this.el.select('ul').append('li').each(function() {
-        d3.select(this).append('span').attr('class', 'breadcrumb--value').style('background', colors.getColor(node.values[0]));
+        d3.select(this).append('span').attr('class', 'breadcrumb--value').style('background', colors.getColor(node.values[0])).append('div').attr('class', 'reflect');
         return d3.select(this).append('h2').attr('class', 'breadcrumb--label').text(node.name);
       }).attr('class', 'visible');
     },
@@ -82,7 +82,7 @@
       steps = [];
       current = node;
       while (current.parent) {
-        steps.unshift(current.parent);
+        steps.unshift(current);
         current = current.parent;
       }
       return steps;
@@ -101,16 +101,6 @@
       tooltip.el.transition().duration(300).style('opacity', 1);
       tooltip.el.select('.tooltip--label').text(d.name);
       return tooltip.el.select('.tooltip--value').text(Math.round(d.values[0]).toLocaleString('fr') + ' €').style('color', colors.getColor(d.values[0]));
-    },
-    update: function() {
-      tooltip.el.style('top', d3.event.pageY - (tooltip.height() + 5) + 'px');
-      return tooltip.el.style('left', (d3.event.pageX - tooltip.width() / 2) + 'px');
-    },
-    hide: function() {
-      return tooltip.el.transition().duration(300).style('opacity', 1e-6);
-    },
-    onMouseover: function() {
-      return tooltip.el.transition().duration(300).style('opacity', 1);
     }
   };
 
@@ -138,10 +128,10 @@
     var zoomLevel;
     breadcrumb.update(breadcrumb.getAncestors(d));
     path.transition().duration(750).attrTween('d', arcTween(d));
-    d3.select('.circle-content').style('opacity', 0).style('display', 'none');
+    d3.select('.root-circle--content').style('opacity', 0).style('display', 'none');
     zoomLevel = breadcrumb.getAncestors(d);
     if (zoomLevel.length === 0) {
-      return d3.select('.circle-content').style('opacity', 1).style('display', 'block');
+      return d3.select('.root-circle--content').style('opacity', 1).style('display', 'block');
     }
   };
 
@@ -184,20 +174,19 @@
       } else {
         return 1;
       }
-    }).on('click', zoomIn).on('mouseover', tooltip.show).on('mousemove', tooltip.update).on('mouseout', tooltip.hide).each(function(d) {
+    }).on('click', zoomIn).on('mouseover', tooltip.show).each(function(d) {
       if (d.depth === 0) {
-        return d3.select('.root').append('foreignObject').attr('class', 'circle-content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'circle-text').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'circle-text--label').each(function(d) {
-          d3.select(this).append('h1').attr('class', 'circle-text--label').text(function(d) {
+        return d3.select('.root').append('foreignObject').attr('class', 'root-circle--content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
+          d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
             return d.name;
           });
-          return d3.select(this).append('p').attr('class', 'circle-text--value number').text(function(d) {
-            return d.values[0].toLocaleString('fr') + ' €';
+          d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
+            return Math.round(d.values[0]).toLocaleString('fr') + ' €';
           });
+          return d3.select(this).append('div').attr('class', 'return');
         });
       }
     });
   });
-
-  tooltip.el.on('mouseover', tooltip.onMouseover).on('mouseleave', tooltip.hide);
 
 }).call(this);

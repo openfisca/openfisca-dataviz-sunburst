@@ -9,99 +9,63 @@
 @import url(http://fonts.googleapis.com/css?family=Arvo|Poiret+One);
 /* @end of Fonts */
 
-
 body {
 	font-family: 'Arvo', serif;
 	font-size: 1em; 
 	background: #eee; color: #909090;
-  -webkit-font-smoothing: antialiased; }
+	-webkit-font-smoothing: antialiased; }
 hr { border: 0; }
 a { text-decoration: none; }
 i { text-align: left; text-indent: -9999px; overflow: hidden; }
 .clear { clear: both; }
 .number { font-family: 'Poiret One', cursive; }
 
-svg { margin: 20px auto; display: block; width: 700px; height: 700px;}
+svg { display:inline; margin: 20px 0; display: block; width: 500px; height: 500px; }
 
-path {
-  stroke: #fff;
-  fill-rule: evenodd; }
+path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
+
+#main { position: relative; float: left; }
+#side { position: relative; float: left; width: 300px; padding: 30px; }
+#side > * { margin-bottom: 20px; }
 
 /**********************/
-/* @group Main circle */
+/* @group Root circle */
 /**********************/
 
-.circle-text {
+.root-circle {
 	color: #fff;
 	display: flex;
 	align-items: center;
 	text-align: center; }
-
-.circle-text--label { margin: auto; }
-
-.circle-text h1.circle-text--label { font-size: 1.125em; }
-
-.circle-text p.circle-text--value { 
-	font-size: 3.125em;
-	margin: 20px 0; }
-
-/*********************/
-/* @group Breadcrumb */
-/*********************/
-
-#breadcrumb ul {
-	margin: 60px 0 0;
-	border-top: 2px solid #fff;
-	min-height: 70px; }
-#breadcrumb ul li {
-	position: relative;
-	text-align: center;
-	min-width: 200px;
-	top: -10px;
-	opacity: 0;
-	transition: opacity 0.3s ease-out;
-	display: inline-block; }
-#breadcrumb ul li.visible { opacity: 1; }
-#breadcrumb span.breadcrumb--value {
+.root-circle--label { margin: auto; }
+.root-circle h1.root-circle--label { font-size: 0.9em; }
+.root-circle p.root-circle--value { font-size: 2.250em; margin: 15px 0; }
+.root-circle .return {
 	display: block;
-	margin: 0 auto;
-	background: #de5a71;
-	border-radius: 100%;
-	border: 4px solid #eee;
-	width: 12px; height: 12px; }
-#breadcrumb h2.breadcrumb--label {
-	font-size: 1.125em;
-	color: #909090;
-	margin: 25px 0; }
-/* @end of Breadcrumb */
+	width: 40px;
+	height: 20px;
+	border-radius: 3px;
+	border: 1px solid #115f7b;
+	margin: auto;
+	background: url(../images/icon-return.png) no-repeat;
+	background-position: center;
+	background-size: 45%;
+	cursor: pointer; }
+/* @end of Root circle */
 
 /******************/
 /* @group Tooltip */
 /******************/
+
 div#tooltip {
-	position: absolute;
-	width: 340px;
+	position: relative;
+	width: 100%;
 	background: #fff;
 	border-radius: 3px;
-	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.2);
 	text-align: center;
-	z-index: 100;
-	opacity: 0;
 	transition: opacity 0.3s ease-out;
-	border: 1px solid transparent; }
-/*div#tooltip.visible {
-	opacity: 1;
-	z-index: 100; }*/
-div#tooltip:after {
-	content: '';
-	display: block;
-	position: absolute;
-	margin: 0 auto;
-	left: 0; right: 0; bottom: -15px;
-	width: 0; height: 0;
-	border-top: 15px solid #fff;
-	border-left: 15px solid transparent;
-	border-right: 15px solid transparent; }
+	padding: 1px 0; }
 div#tooltip h2.tooltip--label {
 	color: #414454;
 	font-size: 1.125em;
@@ -115,41 +79,140 @@ div#tooltip p.tooltip--value {
 	margin: 30px auto 20px;
 	background: transparent; color: #eb4c56;
 	border-radius: 4px;
-	padding: 10px 15px; }
+	padding: 10px 15px 5px 15px; }
 div#tooltip p.tooltip--value.edit { background: #eeeeee; }
 div#tooltip i.dashboard {
 	width: 20px; height: 20px;
 	display: block;
 	background: url(../images/dashboard.png);
 	position: absolute;
-	margin: auto 0;
-	right: 25px; top: 0; bottom: 0;
+	margin: 97px 0 0 10px;
+	right: 20px; top: 0; bottom: 0;
 	cursor: pointer; }
 div#tooltip a.tooltip--find-out-more {
 	color: #9f9f9f;
 	display: block;
-	margin: 20px auto 15px;
+	margin: 14px auto 14px;
 	font-size: 0.938em; }
+/* @end of Tooltip */
 
 /**********************/
-/* @group Family list */
+/* @group Users list  */
 /**********************/
 
-ul#users { margin: 40px 40px; }
-ul#users li { display: inline-block; margin: 10px; }
-
+ul#users { 
+	width: 100%;
+	background: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.2);
+	text-align: center;
+	padding: 0px; }
+ul#users li { display: inline-block; margin: 10px 6px 7px 6px; }
 .family {
 	display: block;
-	width: 45px; height: 45px;
+	width: 42px; height: 42px;
 	background-image: url(../images/family-sprite.png);
 	background-repeat: no-repeat;
-	background-size:187px; }
-
-.mother { background-position: 1px 0px; }
-.father { background-position: -47px 0; }
+	background-size: 187px; }
+.mother { background-position: 0px 0px; }
+.father { background-position: -48px 0; }
 .grandmother { background-position: -94px 0; }
 .grandfather { background-position: -144px 0; }
-.daughter { background-position: 1px -47px; }
-.son { background-position: -47px -47px; }
+.daughter { background-position: 0px -48px; }
+.son { background-position: -48px -48px; }
+/* @end of Users list */
+
+/*********************/
+/* @group Breadcrumb */
+/*********************/
+
+#breadcrumb ul {
+	width: 100%;
+	border-top: 2px solid #fff;
+	background: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.2); 
+	padding: 10px 0 10px 0; }
+#breadcrumb ul li {
+	position: relative;
+	height: 40px;
+	border-bottom: 1px solid #eeeeee;
+	padding-top: 10px;
+	transition: opacity 0.3s ease-out;
+	box-sizing: border-box;
+	cursor: pointer; }
+#breadcrumb ul li:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 38px;
+	left: 18px;
+	width: 0;
+	height: 0;
+	border-color: transparent transparent transparent #fff;
+	border-style: solid;
+	border-width: 6px;
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg); }
+#breadcrumb ul li:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 39px;
+	left: 18px;
+	width: 0;
+	height: 0;
+	border-color: transparent transparent transparent #eeeeee;
+	border-style: solid;
+	border-width: 6px;
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg); }
+#breadcrumb ul li:last-child { border: none; }
+#breadcrumb ul li:last-child:before, #breadcrumb ul li:last-child:after { display:none; }
+#breadcrumb ul li.visible { opacity: 1; }
+#breadcrumb span.breadcrumb--value {
+	position: relative;
+	top: 1px;
+	display: inline-block;
+	background: #de5a71;
+	border-radius: 100%;
+	width: 16px; height: 16px;
+	margin: 0px 14px 0 16px;
+	overflow: hidden; }
+#breadcrumb span.breadcrumb--value .reflect {
+	position: relative;
+	left: 8px;
+	width: 8px;
+	height: 16px;
+	background-color: rgba(1,1,1,0.1); }
+#breadcrumb h2.breadcrumb--label {
+	display: inline;
+	font-size: 1.125em;
+	color: #414454; }
+/* @end of Breadcrumb */
+
+/**********************/
+/* @group Date picker */
+/**********************/
+
+#datepicker ul {
+	width: 100%;
+	border-top: 2px solid #fff;
+	background: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.2); 
+	padding: 10px 0 10px 0; }
+#datepicker ul li {
+	position: relative;
+	text-align: center;
+	font-size: 1.875em;
+	color: #414454;
+	height: 40px;
+	padding-top: 4px;
+	transition: opacity 0.3s ease-out;
+	box-sizing: border-box; }
+/* @end of Date picker */
 
 /* @end of Main 
