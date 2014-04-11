@@ -197,6 +197,7 @@ d3.json 'data/example.json', (error, root) ->
 						d3.select this
 							.append 'div'
 							.attr 'class', 'return'
+						tooltip.show(d)
 	return
 
 

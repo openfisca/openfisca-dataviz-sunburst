@@ -183,7 +183,8 @@
           d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
             return Math.round(d.values[0]).toLocaleString('fr') + ' €';
           });
-          return d3.select(this).append('div').attr('class', 'return');
+          d3.select(this).append('div').attr('class', 'return');
+          return tooltip.show(d);
         });
       }
     });
