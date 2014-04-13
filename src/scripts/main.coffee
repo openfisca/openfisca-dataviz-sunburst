@@ -47,6 +47,7 @@ classes =
 # BREADCRUMB 
 breadcrumb = 
 	el: d3.select '#breadcrumb'
+	li: d3.select '#breadcrumb li'
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
@@ -62,6 +63,8 @@ breadcrumb =
 						.attr 'class', 'breadcrumb--label'
 						.text node.name
 				.attr 'class', 'visible'
+				.attr 'data-depth', node.depth
+				.on 'click', () -> breadcrumb.click node.depth
 	update: (path) ->
 		@el.select 'ul'
 			.html('')
@@ -74,6 +77,8 @@ breadcrumb =
 			steps.unshift current # unshift -> beginning of the array != push()
 			current = current.parent
 		steps
+	click: (depth) ->
+		console.log depth
 
 
 # TOOLTIP 
@@ -158,6 +163,7 @@ d3.json 'data/example.json', (error, root) ->
 		.attr 'class', (d) -> classes.getLevel(d.depth)
 		.append 'path'
 		.attr 'data-name', (d) -> d.name
+		.attr 'data-depth', (d) -> d.depth
 		.attr 'data-value', (d) -> Math.round d.values[0]
 		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
@@ -205,7 +211,6 @@ d3.json 'data/example.json', (error, root) ->
 # tooltip.el
 # 	.on 'mouseover', tooltip.onMouseover
 # 	.on 'mouseleave', tooltip.hide
-
 
 # d3.select self.frameElement
 # 	.style 'height', height + 'px'
