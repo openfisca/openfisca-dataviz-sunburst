@@ -73,7 +73,7 @@ breadcrumb =
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
-				.on 'click', () -> breadcrumb.click node.code
+				.on 'click', () ->  node.cbreadcrumb.navigateode
 				.each () ->
 					d3.select this
 						.append 'span'
@@ -99,8 +99,10 @@ breadcrumb =
 			steps.unshift current # unshift -> beginning of the array != push()
 			current = current.parent
 		steps
-	click: (code) ->
+	navigate: (code) ->
 		d3.trigger d3.select('path[data-code=' + code + ']'), 'click'
+	return: (node) ->
+		d3.trigger d3.select('path[data-code=' + node.parent.code + ']'), 'click'
 
 # TOOLTIP 
 tooltip =
@@ -169,7 +171,8 @@ zoomIn = (d) ->
 				.attr 'class', 'root-circle--value number'
 				.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
 			d3.select this
-				.append 'div'
+				.append 'button'
+				.on 'click', () -> breadcrumb.return d
 				.attr 'class', 'return'
 	breadcrumb.update breadcrumb.getAncestors(d)
 	path.transition()

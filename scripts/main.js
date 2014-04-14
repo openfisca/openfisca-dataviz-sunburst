@@ -86,7 +86,7 @@
     li: d3.select('#breadcrumb li'),
     create: function(node) {
       return this.el.select('ul').append('li').on('click', function() {
-        return breadcrumb.click(node.code);
+        return node.cbreadcrumb.navigateode;
       }).each(function() {
         d3.select(this).append('span').attr('class', 'breadcrumb--value').style('background', colors.getColor(node.values[0])).append('div').attr('class', 'reflect');
         return d3.select(this).append('h2').attr('class', 'breadcrumb--label').text(node.name);
@@ -108,8 +108,11 @@
       }
       return steps;
     },
-    click: function(code) {
+    navigate: function(code) {
       return d3.trigger(d3.select('path[data-code=' + code + ']'), 'click');
+    },
+    "return": function(node) {
+      return d3.trigger(d3.select('path[data-code=' + node.parent.code + ']'), 'click');
     }
   };
 
@@ -157,7 +160,9 @@
       d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
         return Math.round(d.values[0]).toLocaleString('fr') + ' €';
       });
-      return d3.select(this).append('div').attr('class', 'return');
+      return d3.select(this).append('button').on('click', function() {
+        return breadcrumb["return"](d);
+      }).attr('class', 'return');
     });
     breadcrumb.update(breadcrumb.getAncestors(d));
     path.transition().duration(750).attrTween('d', arcTween(d));
