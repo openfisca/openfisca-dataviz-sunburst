@@ -134,8 +134,8 @@ tooltip =
 arcTween = (d) ->
 	xd = d3.interpolate x.domain(), [d.x, d.x + d.dx]
 	yd = d3.interpolate y.domain(), [d.y, 1]
-	# yr = d3.interpolate y.range(), [(if d.y then 0 else 0), radius]
-	yr = d3.interpolate y.range(), [(if d.y then 20 else 0), radius]
+	yr = d3.interpolate y.range(), [0, radius]
+#	yr = d3.interpolate y.range(), [(if d.y then 20 else 0), radius]
 	(d, i) ->
 		(if i then (t) ->
 			arc d
@@ -146,6 +146,31 @@ arcTween = (d) ->
 
 
 zoomIn = (d) ->
+	# append label in root-circle
+	d3.select this.parentNode
+		.append 'foreignObject'
+		.attr 'class', 'root-circle--content'
+		.attr 'x', widthRoot / 2 * -1
+		.attr 'y', widthRoot / 2 * -1
+		.attr 'width', widthRoot
+		.attr 'height', heightRoot
+		.append 'xhtml:div'
+		.attr 'class', 'root-circle'
+		.style 'width', widthRoot + 'px'
+		.style 'height', widthRoot + 'px'
+		.append 'div'
+		.each (d) ->
+			d3.select this
+				.append 'h1'
+				.attr 'class', 'root-circle--label'
+				.text (d) -> d.name
+			d3.select this
+				.append 'p'
+				.attr 'class', 'root-circle--value number'
+				.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
+			d3.select this
+				.append 'div'
+				.attr 'class', 'return'
 	breadcrumb.update breadcrumb.getAncestors(d)
 	path.transition()
 		.duration 750
@@ -159,6 +184,40 @@ zoomIn = (d) ->
 		d3.select '.root-circle--content'
 		.style 'opacity', 1
 		.style 'display', 'block'
+	# when former 'root hole' is hidden, delete thin line :
+	# # hide other parts of the zoomed arc
+	elClass = classes.getLevel(d.depth)
+	# # unhide previously hidden parts
+	d3.selectAll 'path'
+		.style 'opacity', '1'
+	# # show only the selected part of the arc
+	d3.selectAll 'path.' + elClass
+		.style 'opacity', '0'
+	d3.select this
+		.style 'opacity', '1'
+
+mouseOver = (d) ->
+	tooltip.show(d)
+	d3.selectAll 'path'
+		.style 'opacity', 0.4
+	d3.select this
+		.style 'opacity', 1
+	# d3.select 'path.root'
+	# 	.style 'opacity', 1
+
+mouseLeave = (d) ->
+# Deactivate all segments during transition.
+	d3.selectAll 'path'
+		.on 'mouseover', null
+
+# Transition each segment to full opacity and then reactivate it.
+	d3.selectAll 'path'
+		.transition()
+		.duration(750)
+		.style 'opacity', 1
+		.each 'end', () -> 
+			d3.select this
+				.on 'mouseover', mouseOver
 
 # API
 d3.json 'data/example.json', (error, root) ->
@@ -192,7 +251,7 @@ d3.json 'data/example.json', (error, root) ->
 			if d.parent and d.parent.values[0] == d.values[0] then 1
 			else 1
 		.on 'click', zoomIn
-		.on 'mouseover', tooltip.show
+		.on 'mouseover', mouseOver
 		# .on 'mousemove', tooltip.update
 		# .on 'mouseout', tooltip.hide
 		.each (d) ->
@@ -219,12 +278,10 @@ d3.json 'data/example.json', (error, root) ->
 							.append 'p'
 							.attr 'class', 'root-circle--value number'
 							.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
-						d3.select this
-							.append 'div'
-							.attr 'class', 'return'
 						tooltip.show(d)
 	return
 
+d3.select('svg').on('mouseleave', mouseLeave);
 
 # Usage
 # tooltip.el
