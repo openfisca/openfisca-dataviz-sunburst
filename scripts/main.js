@@ -90,7 +90,6 @@
 
   breadcrumb = {
     el: d3.select('#breadcrumb'),
-    li: d3.select('#breadcrumb li'),
     create: function(node) {
       return this.el.select('ul').append('li').on('click', function() {
         return breadcrumb.navigate(node.code);
@@ -159,9 +158,14 @@
   };
 
   zoomIn = function(d) {
+    if (d.depth === 0) {
+      d3.select('#breadcrumb ul').html('');
+      breadcrumb.create(d);
+    } else {
+      breadcrumb.update(breadcrumb.getAncestors(d));
+    }
     d3.selectAll('.root-circle--content').classed('visible', false);
     d3.select(this.nextElementSibling).classed('visible', true);
-    breadcrumb.update(breadcrumb.getAncestors(d));
     path.transition().duration(750).attrTween('d', arcTween(d));
     d3.select('.root-circle--content').style('opacity', 0).style('display', 'none');
     if (breadcrumb.getAncestors(d).length === 0) {
@@ -212,8 +216,9 @@
     }).on('click', zoomIn).on('mouseover', chart.highlight).each(function(d) {
       return d3.select(this.parentNode).append('foreignObject').attr('class', 'root-circle--content').classed('visible', (d.depth === 0 ? true : false)).attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
         if (d.depth === 0) {
-          d3.select('this');
-          return tooltip.show(d);
+          tooltip.show(d);
+          breadcrumb.update;
+          return breadcrumb.create(d);
         }
       }).each(function(d) {
         d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {

@@ -87,7 +87,6 @@ classes =
 # BREADCRUMB 
 breadcrumb = 
 	el: d3.select '#breadcrumb'
-	li: d3.select '#breadcrumb li'
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
@@ -166,12 +165,18 @@ arcTween = (d) ->
 
 
 zoomIn = (d) ->
+	# update breadcrumb
+	if d.depth == 0 
+		d3.select '#breadcrumb ul'
+			.html ''
+		breadcrumb.create(d)
+	else
+		breadcrumb.update breadcrumb.getAncestors(d)
 	# append label in root-circle
 	d3.selectAll '.root-circle--content'
 		.classed('visible', false)
 	d3.select this.nextElementSibling
 		.classed('visible', true)
-	breadcrumb.update breadcrumb.getAncestors(d)
 	path.transition()
 		.duration 750
 		.attrTween 'd', arcTween(d)
@@ -248,8 +253,9 @@ d3.json 'data/example.json', (error, root) ->
 				# Update tooltip with root value
 				.each (d) ->
 					if d.depth is 0
-						d3.select 'this'
 						tooltip.show(d)
+						breadcrumb.update
+						breadcrumb.create(d)
 				# Append all labels
 				.each (d) ->
 					d3.select this
