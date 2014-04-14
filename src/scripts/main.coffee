@@ -4,19 +4,16 @@ d3.trigger = (d3Obj, evtName) ->
 		el    = d3Obj[0][0]
 		event = d3.event;
 
-		if (event.initMouseEvent)      
-			clickEvent = document.createEvent("MouseEvent")
-			clickEvent.initMouseEvent(
-				"click", true, true, window, 0, 
-				event.screenX, event.screenY, event.clientX, event.clientY, 
-				event.ctrlKey, event.altKey, event.shiftKey, event.metaKey, 
-				0, null)
-			el.dispatchEvent(clickEvent)
+		if event.initMouseEvent  
+			clickEvent = document.createEvent 'MouseEvent'
+			clickEvent.initMouseEvent "click", true, true, window, 0, event.screenX, event.screenY, event.clientX, event.clientY, event.ctrlKey, event.altKey, event.shiftKey, event.metaKey, 0, null
+			el.dispatchEvent clickEvent
 		else 
-			if (document.createEventObject)
-				clickEvent = document.createEventObject (window.event)
+			if document.createEventObject
+				clickEvent = document.createEventObject window.event
 				clickEvent.button = 1
-				el.fireEvent(evtName, clickEvent)
+				el.fireEvent evtName, clickEvent
+
 
 # CONSTANTS
 width = 500
@@ -30,11 +27,34 @@ y = d3.scale.sqrt()
 	.range [0, radius]
 
 
+chart = 
+	highlight: (d) ->
+		tooltip.show(d)
+		d3.selectAll 'path'
+			.style 'opacity', 0.4
+		d3.select this
+			.style 'opacity', 1
+		# d3.select 'path.root'
+		# 	.style 'opacity', 1
+	highlightAll: (s) ->
+		# Deactivate all segments during transition.
+		d3.selectAll 'path'
+			.on 'mouseover', null
+		# Transition each segment to full opacity and then reactivate it.
+		d3.selectAll 'path'
+			.transition()
+			.duration(750)
+			.style 'opacity', 1
+			.each 'end', () -> 
+				d3.select this
+					.on 'mouseover', chart.highlight
+
 svg = d3.select 'svg'
 	.attr 'width', width
 	.attr 'height', height
 	.append 'g'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2) + ')'
+	.on 'mouseleave', chart.highlightAll
 partition = d3.layout.partition()
 	.value (d) -> 
 		Math.abs Math.round d.values[0]
@@ -46,8 +66,6 @@ arc = d3.svg.arc()
 	.outerRadius (d) -> Math.max 0, y(d.y + d.dy)
 
 path = null
-
-
 
 # COLORS
 colors = 
@@ -66,6 +84,7 @@ classes =
 	getSign: (nb) ->
 		if nb < 0 then 'negative' else 'positive'
 
+
 # BREADCRUMB 
 breadcrumb = 
 	el: d3.select '#breadcrumb'
@@ -73,7 +92,7 @@ breadcrumb =
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
-				.on 'click', () ->  node.cbreadcrumb.navigateode
+				.on 'click', () ->  breadcrumb.navigate node.code
 				.each () ->
 					d3.select this
 						.append 'span'
@@ -182,45 +201,21 @@ zoomIn = (d) ->
 	d3.select '.root-circle--content'
 		.style 'opacity', 0
 		.style 'display', 'none'
-	zoomLevel = breadcrumb.getAncestors(d)
-	if zoomLevel.length == 0
+	if breadcrumb.getAncestors(d).length == 0
 		d3.select '.root-circle--content'
 		.style 'opacity', 1
 		.style 'display', 'block'
 	# when former 'root hole' is hidden, delete thin line :
 	# # hide other parts of the zoomed arc
-	elClass = classes.getLevel(d.depth)
 	# # unhide previously hidden parts
 	d3.selectAll 'path'
 		.style 'opacity', '1'
 	# # show only the selected part of the arc
-	d3.selectAll 'path.' + elClass
+	d3.selectAll 'path.' + classes.getLevel(d.depth)
 		.style 'opacity', '0'
 	d3.select this
 		.style 'opacity', '1'
 
-mouseOver = (d) ->
-	tooltip.show(d)
-	d3.selectAll 'path'
-		.style 'opacity', 0.4
-	d3.select this
-		.style 'opacity', 1
-	# d3.select 'path.root'
-	# 	.style 'opacity', 1
-
-mouseLeave = (d) ->
-# Deactivate all segments during transition.
-	d3.selectAll 'path'
-		.on 'mouseover', null
-
-# Transition each segment to full opacity and then reactivate it.
-	d3.selectAll 'path'
-		.transition()
-		.duration(750)
-		.style 'opacity', 1
-		.each 'end', () -> 
-			d3.select this
-				.on 'mouseover', mouseOver
 
 # API
 d3.json 'data/example.json', (error, root) ->
@@ -254,7 +249,7 @@ d3.json 'data/example.json', (error, root) ->
 			if d.parent and d.parent.values[0] == d.values[0] then 1
 			else 1
 		.on 'click', zoomIn
-		.on 'mouseover', mouseOver
+		.on 'mouseover', chart.highlight
 		# .on 'mousemove', tooltip.update
 		# .on 'mouseout', tooltip.hide
 		.each (d) ->
@@ -284,7 +279,7 @@ d3.json 'data/example.json', (error, root) ->
 						tooltip.show(d)
 	return
 
-d3.select('svg').on('mouseleave', mouseLeave);
+
 
 # Usage
 # tooltip.el
