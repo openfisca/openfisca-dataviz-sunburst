@@ -35,11 +35,10 @@
   y = d3.scale.sqrt().range([0, radius]);
 
   chart = {
-    highlight: function(d) {},
-    highlightAll: function(s) {
-
-      /* TO FIX : on hover, the path animation stops */
-    }
+    highlight: function(d) {
+      return tooltip.show(d);
+    },
+    highlightAll: function(s) {}
   };
 
   svg = d3.select('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')').on('mouseleave', chart.highlightAll);
@@ -212,16 +211,20 @@
       }
     }).on('click', zoomIn).on('mouseover', chart.highlight).each(function(d) {
       return d3.select(this.parentNode).append('foreignObject').attr('class', 'root-circle--content').classed('visible', (d.depth === 0 ? true : false)).attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
+        if (d.depth === 0) {
+          d3.select('this');
+          return tooltip.show(d);
+        }
+      }).each(function(d) {
         d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
           return d.name;
         });
         d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
           return Math.round(d.values[0]).toLocaleString('fr') + ' €';
         });
-        d3.select(this).append('button').on('click', function() {
+        return d3.select(this).append('button').on('click', function() {
           return breadcrumb["return"](d);
         }).attr('class', 'return').classed('visible', (d.depth > 0 ? true : false));
-        return tooltip.show(d);
       });
     });
   });

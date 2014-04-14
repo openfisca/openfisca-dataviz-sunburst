@@ -29,13 +29,13 @@ y = d3.scale.sqrt()
 
 chart = 
 	highlight: (d) ->
-		# tooltip.show(d)
 		# d3.selectAll 'path'
 		# 	.style 'opacity', 0.4
 		# d3.select this
 		# 	.style 'opacity', 1
+		tooltip.show(d)
 	highlightAll: (s) ->
-		### TO FIX : on hover, the path animation stops ###
+		# ## TO FIX : on hover, the path animation stops ###
 		# # Deactivate all segments during transition.
 		# d3.selectAll 'path'
 		# 	.on 'mouseover', null
@@ -231,8 +231,6 @@ d3.json 'data/example.json', (error, root) ->
 		# .on 'mousemove', tooltip.update
 		# .on 'mouseout', tooltip.hide
 		.each (d) ->
-			# if d.depth is 0
-			# 	d3.select '.root'
 			d3.select this.parentNode
 				.append 'foreignObject'
 				.attr 'class', 'root-circle--content'
@@ -247,6 +245,12 @@ d3.json 'data/example.json', (error, root) ->
 				.style 'height', widthRoot + 'px'
 				.append 'div'
 				.attr 'class', 'root-circle--label'
+				# Update tooltip with root value
+				.each (d) ->
+					if d.depth is 0
+						d3.select 'this'
+						tooltip.show(d)
+				# Append all labels
 				.each (d) ->
 					d3.select this
 						.append 'h1'
@@ -261,7 +265,6 @@ d3.json 'data/example.json', (error, root) ->
 						.on 'click', () -> breadcrumb.return d
 						.attr 'class', 'return'
 						.classed('visible', (if d.depth > 0 then true else false))
-					tooltip.show(d)
 	return
 
 
