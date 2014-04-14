@@ -38,11 +38,13 @@ path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 	display: flex;
 	align-items: center;
 	text-align: center; }
+.root-circle--content { display: none; }
+.root-circle--content.visible { display: block; }
 .root-circle--label { margin: auto; }
 .root-circle h1.root-circle--label { font-size: 0.9em; }
 .root-circle p.root-circle--value { font-size: 2.250em; margin: 15px 0; }
 .root-circle .return {
-	display: block;
+	display: none;
 	width: 30px; height: 30px;
 	border: 0; border-radius: 100%;
 	margin: auto;
@@ -51,6 +53,7 @@ path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 	background-size: 45%;
 	cursor: pointer;
 	outline: 0; }
+.root-circle .return.visible { display: block; }
 /* @end of Root circle */
 
 /******************/

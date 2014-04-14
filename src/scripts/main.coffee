@@ -29,25 +29,24 @@ y = d3.scale.sqrt()
 
 chart = 
 	highlight: (d) ->
-		tooltip.show(d)
-		d3.selectAll 'path'
-			.style 'opacity', 0.4
-		d3.select this
-			.style 'opacity', 1
-		# d3.select 'path.root'
+		# tooltip.show(d)
+		# d3.selectAll 'path'
+		# 	.style 'opacity', 0.4
+		# d3.select this
 		# 	.style 'opacity', 1
 	highlightAll: (s) ->
-		# Deactivate all segments during transition.
-		d3.selectAll 'path'
-			.on 'mouseover', null
-		# Transition each segment to full opacity and then reactivate it.
-		d3.selectAll 'path'
-			.transition()
-			.duration(750)
-			.style 'opacity', 1
-			.each 'end', () -> 
-				d3.select this
-					.on 'mouseover', chart.highlight
+		### TO FIX : on hover, the path animation stops ###
+		# # Deactivate all segments during transition.
+		# d3.selectAll 'path'
+		# 	.on 'mouseover', null
+		# # Transition each segment to full opacity and then reactivate it.
+		# d3.selectAll 'path'
+		# 	.transition()
+		# 	.duration(750)
+		# 	.style 'opacity', 1
+		# 	.each 'end', () -> 
+		# 		d3.select this
+		# 			.on 'mouseover', chart.highlight
 
 svg = d3.select 'svg'
 	.attr 'width', width
@@ -168,31 +167,10 @@ arcTween = (d) ->
 
 zoomIn = (d) ->
 	# append label in root-circle
-	d3.select this.parentNode
-		.append 'foreignObject'
-		.attr 'class', 'root-circle--content'
-		.attr 'x', widthRoot / 2 * -1
-		.attr 'y', widthRoot / 2 * -1
-		.attr 'width', widthRoot
-		.attr 'height', heightRoot
-		.append 'xhtml:div'
-		.attr 'class', 'root-circle'
-		.style 'width', widthRoot + 'px'
-		.style 'height', widthRoot + 'px'
-		.append 'div'
-		.each (d) ->
-			d3.select this
-				.append 'h1'
-				.attr 'class', 'root-circle--label'
-				.text (d) -> d.name
-			d3.select this
-				.append 'p'
-				.attr 'class', 'root-circle--value number'
-				.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
-			d3.select this
-				.append 'button'
-				.on 'click', () -> breadcrumb.return d
-				.attr 'class', 'return'
+	d3.selectAll '.root-circle--content'
+		.classed('visible', false)
+	d3.select this.nextElementSibling
+		.classed('visible', true)
 	breadcrumb.update breadcrumb.getAncestors(d)
 	path.transition()
 		.duration 750
@@ -253,30 +231,37 @@ d3.json 'data/example.json', (error, root) ->
 		# .on 'mousemove', tooltip.update
 		# .on 'mouseout', tooltip.hide
 		.each (d) ->
-			if d.depth is 0
-				d3.select '.root'
-					.append 'foreignObject'
-					.attr 'class', 'root-circle--content'
-					.attr 'x', widthRoot / 2 * -1
-					.attr 'y', widthRoot / 2 * -1
-					.attr 'width', widthRoot
-					.attr 'height', heightRoot
-					.append 'xhtml:div'
-					.attr 'class', 'root-circle'
-					.style 'width', widthRoot + 'px'
-					.style 'height', widthRoot + 'px'
-					.append 'div'
-					.attr 'class', 'root-circle--label'
-					.each (d) ->
-						d3.select this
-							.append 'h1'
-							.attr 'class', 'root-circle--label'
-							.text (d) -> d.name
-						d3.select this
-							.append 'p'
-							.attr 'class', 'root-circle--value number'
-							.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
-						tooltip.show(d)
+			# if d.depth is 0
+			# 	d3.select '.root'
+			d3.select this.parentNode
+				.append 'foreignObject'
+				.attr 'class', 'root-circle--content'
+				.classed('visible', (if d.depth == 0 then true else false))
+				.attr 'x', widthRoot / 2 * -1
+				.attr 'y', widthRoot / 2 * -1
+				.attr 'width', widthRoot
+				.attr 'height', heightRoot
+				.append 'xhtml:div'
+				.attr 'class', 'root-circle'
+				.style 'width', widthRoot + 'px'
+				.style 'height', widthRoot + 'px'
+				.append 'div'
+				.attr 'class', 'root-circle--label'
+				.each (d) ->
+					d3.select this
+						.append 'h1'
+						.attr 'class', 'root-circle--label'
+						.text (d) -> d.name
+					d3.select this
+						.append 'p'
+						.attr 'class', 'root-circle--value number'
+						.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
+					d3.select this 
+						.append 'button'
+						.on 'click', () -> breadcrumb.return d
+						.attr 'class', 'return'
+						.classed('visible', (if d.depth > 0 then true else false))
+					tooltip.show(d)
 	return
 
 

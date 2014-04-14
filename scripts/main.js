@@ -35,16 +35,10 @@
   y = d3.scale.sqrt().range([0, radius]);
 
   chart = {
-    highlight: function(d) {
-      tooltip.show(d);
-      d3.selectAll('path').style('opacity', 0.4);
-      return d3.select(this).style('opacity', 1);
-    },
+    highlight: function(d) {},
     highlightAll: function(s) {
-      d3.selectAll('path').on('mouseover', null);
-      return d3.selectAll('path').transition().duration(750).style('opacity', 1).each('end', function() {
-        return d3.select(this).on('mouseover', chart.highlight);
-      });
+
+      /* TO FIX : on hover, the path animation stops */
     }
   };
 
@@ -166,17 +160,8 @@
   };
 
   zoomIn = function(d) {
-    d3.select(this.parentNode).append('foreignObject').attr('class', 'root-circle--content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').each(function(d) {
-      d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
-        return d.name;
-      });
-      d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
-        return Math.round(d.values[0]).toLocaleString('fr') + ' €';
-      });
-      return d3.select(this).append('button').on('click', function() {
-        return breadcrumb["return"](d);
-      }).attr('class', 'return');
-    });
+    d3.selectAll('.root-circle--content').classed('visible', false);
+    d3.select(this.nextElementSibling).classed('visible', true);
     breadcrumb.update(breadcrumb.getAncestors(d));
     path.transition().duration(750).attrTween('d', arcTween(d));
     d3.select('.root-circle--content').style('opacity', 0).style('display', 'none');
@@ -226,17 +211,18 @@
         return 1;
       }
     }).on('click', zoomIn).on('mouseover', chart.highlight).each(function(d) {
-      if (d.depth === 0) {
-        return d3.select('.root').append('foreignObject').attr('class', 'root-circle--content').attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
-          d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
-            return d.name;
-          });
-          d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
-            return Math.round(d.values[0]).toLocaleString('fr') + ' €';
-          });
-          return tooltip.show(d);
+      return d3.select(this.parentNode).append('foreignObject').attr('class', 'root-circle--content').classed('visible', (d.depth === 0 ? true : false)).attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
+        d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
+          return d.name;
         });
-      }
+        d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
+          return Math.round(d.values[0]).toLocaleString('fr') + ' €';
+        });
+        d3.select(this).append('button').on('click', function() {
+          return breadcrumb["return"](d);
+        }).attr('class', 'return').classed('visible', (d.depth > 0 ? true : false));
+        return tooltip.show(d);
+      });
     });
   });
 
