@@ -1,3 +1,23 @@
+# TRIGGERS
+d3.trigger = (d3Obj, evtName) ->
+		console.log(d3Obj);
+		el    = d3Obj[0][0]
+		event = d3.event;
+
+		if (event.initMouseEvent)      
+			clickEvent = document.createEvent("MouseEvent")
+			clickEvent.initMouseEvent(
+				"click", true, true, window, 0, 
+				event.screenX, event.screenY, event.clientX, event.clientY, 
+				event.ctrlKey, event.altKey, event.shiftKey, event.metaKey, 
+				0, null)
+			el.dispatchEvent(clickEvent)
+		else 
+			if (document.createEventObject)
+				clickEvent = document.createEventObject (window.event)
+				clickEvent.button = 1
+				el.fireEvent(evtName, clickEvent)
+
 # CONSTANTS
 width = 500
 height = 500
@@ -27,6 +47,8 @@ arc = d3.svg.arc()
 
 path = null
 
+
+
 # COLORS
 colors = 
 	positive: ['#1DC2F7', '#1BB6E8', '#1AAEDE', '#18A2CF', '#1696BF', '#1A8BB3', '#127899', '#136480', '#0E5066','#0B3C4D']
@@ -51,6 +73,7 @@ breadcrumb =
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
+				.on 'click', () -> breadcrumb.click node.code
 				.each () ->
 					d3.select this
 						.append 'span'
@@ -64,7 +87,6 @@ breadcrumb =
 						.text node.name
 				.attr 'class', 'visible'
 				.attr 'data-depth', node.depth
-				.on 'click', () -> breadcrumb.click node.depth
 	update: (path) ->
 		@el.select 'ul'
 			.html('')
@@ -77,9 +99,8 @@ breadcrumb =
 			steps.unshift current # unshift -> beginning of the array != push()
 			current = current.parent
 		steps
-	click: (depth) ->
-		console.log depth
-
+	click: (code) ->
+		d3.trigger d3.select('path[data-code=' + code + ']'), 'click'
 
 # TOOLTIP 
 tooltip =
@@ -116,12 +137,12 @@ arcTween = (d) ->
 	# yr = d3.interpolate y.range(), [(if d.y then 0 else 0), radius]
 	yr = d3.interpolate y.range(), [(if d.y then 20 else 0), radius]
 	(d, i) ->
-    (if i then (t) ->
-      arc d
-     else (t) ->
-      x.domain xd(t)
-      y.domain(yd(t)).range yr(t)
-      arc d)
+		(if i then (t) ->
+			arc d
+		else (t) ->
+			x.domain xd(t)
+			y.domain(yd(t)).range yr(t)
+			arc d)
 
 
 zoomIn = (d) ->
@@ -162,9 +183,7 @@ d3.json 'data/example.json', (error, root) ->
 		.append 'g'
 		.attr 'class', (d) -> classes.getLevel(d.depth)
 		.append 'path'
-		.attr 'data-name', (d) -> d.name
-		.attr 'data-depth', (d) -> d.depth
-		.attr 'data-value', (d) -> Math.round d.values[0]
+		.attr 'data-code', (d) -> d.code
 		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
 		.style 'display', (d) -> if d.values[0] == 0 then 'none'
