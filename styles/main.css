@@ -32,18 +32,17 @@ path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 /**********************/
 /* @group Root circle */
 /**********************/
-
-.root-circle {
+.main-circle { display: none; }
+.main-circle.visible { display: block; }
+.main-circle > div {
 	color: #fff;
 	display: flex;
 	align-items: center;
 	text-align: center; }
-.root-circle--content { display: none; }
-.root-circle--content.visible { display: block; }
-.root-circle--label { margin: auto; }
-.root-circle h1.root-circle--label { font-size: 0.9em; }
-.root-circle p.root-circle--value { font-size: 2.250em; margin: 15px 0; }
-.root-circle .return {
+.main-circle > div > div { margin: auto; }
+.main-circle h1.main-circle--label { font-size: 0.9em; }
+.main-circle p.main-circle--value { font-size: 2.250em; margin: 15px 0; }
+.main-circle .return {
 	display: none;
 	width: 30px; height: 30px;
 	border: 0; border-radius: 100%;
@@ -53,7 +52,7 @@ path { stroke: #fff; fill-rule: evenodd; cursor: pointer; }
 	background-size: 45%;
 	cursor: pointer;
 	outline: 0; }
-.root-circle .return.visible { display: block; }
+.main-circle .return.visible { display: block; }
 /* @end of Root circle */
 
 /******************/
@@ -164,7 +163,7 @@ ul#users li { display: inline-block; margin: 10px 6px 7px 6px; }
 #breadcrumb ul li:last-child { border: none; }
 #breadcrumb ul li:last-child:before, 
 #breadcrumb ul li:last-child:after { display:none; }
-#breadcrumb ul li.visible { opacity: 1; }
+/*#breadcrumb ul li.visible { opacity: 1; }*/
 #breadcrumb span.breadcrumb--value {
 	position: relative;
 	top: 1px;

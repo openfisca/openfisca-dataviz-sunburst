@@ -4,7 +4,6 @@
 
   d3.trigger = function(d3Obj, evtName) {
     var clickEvent, el, event;
-    console.log(d3Obj);
     el = d3Obj[0][0];
     event = d3.event;
     if (event.initMouseEvent) {
@@ -35,13 +34,37 @@
   y = d3.scale.sqrt().range([0, radius]);
 
   chart = {
-    highlight: function(d) {
+    rootCircle: null,
+    mainCircle: null,
+    init: function() {
+      this.mainCircle = this.rootCircle;
+      tooltip.show(chart.rootCircle);
+      return breadcrumb.create(chart.rootCircle);
+    },
+    onMouseover: function(d) {
+      var el;
+      el = this;
+      chart.highlight(el);
       return tooltip.show(d);
     },
-    highlightAll: function(s) {}
+    onMouseleave: function(d) {
+      chart.highlightAll();
+      return tooltip.show(chart.mainCircle);
+    },
+    highlight: function(el) {
+      if (el.classList.contains('current')) {
+        return chart.highlightAll();
+      } else {
+        d3.selectAll('.arc').style('opacity', 0.6);
+        return d3.select(el).style('opacity', 1);
+      }
+    },
+    highlightAll: function() {
+      return d3.selectAll('.arc').style('opacity', 1);
+    }
   };
 
-  svg = d3.select('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')').on('mouseleave', chart.highlightAll);
+  svg = d3.select('svg').attr('width', width).attr('height', height).append('g').attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')').on('mouseleave', chart.onMouseleave);
 
   partition = d3.layout.partition().value(function(d) {
     return Math.abs(Math.round(d.values[0]));
@@ -91,15 +114,16 @@
   breadcrumb = {
     el: d3.select('#breadcrumb'),
     create: function(node) {
-      return this.el.select('ul').append('li').on('click', function() {
-        return breadcrumb.navigate(node.code);
-      }).each(function() {
+      return this.el.select('ul').append('li').each(function() {
         d3.select(this).append('span').attr('class', 'breadcrumb--value').style('background', colors.getColor(node.values[0])).append('div').attr('class', 'reflect');
         return d3.select(this).append('h2').attr('class', 'breadcrumb--label').text(node.name);
-      }).attr('class', 'visible').attr('data-depth', node.depth);
+      }).on('click', function() {
+        return breadcrumb.navigate(node.code);
+      });
     },
     update: function(path) {
       this.el.select('ul').html('');
+      breadcrumb.create(chart.rootCircle);
       return path.forEach(function(node) {
         return breadcrumb.create(node);
       });
@@ -158,19 +182,13 @@
   };
 
   zoomIn = function(d) {
-    if (d.depth === 0) {
-      d3.select('#breadcrumb ul').html('');
-      breadcrumb.create(d);
-    } else {
-      breadcrumb.update(breadcrumb.getAncestors(d));
-    }
-    d3.selectAll('.root-circle--content').classed('visible', false);
-    d3.select(this.nextElementSibling).classed('visible', true);
+    chart.mainCircle = d;
     path.transition().duration(750).attrTween('d', arcTween(d));
-    d3.select('.root-circle--content').style('opacity', 0).style('display', 'none');
-    if (breadcrumb.getAncestors(d).length === 0) {
-      d3.select('.root-circle--content').style('opacity', 1).style('display', 'block');
-    }
+    breadcrumb.update(breadcrumb.getAncestors(d));
+    d3.selectAll('.arc').classed('current', false);
+    d3.select(this.parentNode).classed('current', true);
+    d3.selectAll('.main-circle').classed('visible', false);
+    d3.select(this.nextElementSibling).classed('visible', true);
     d3.selectAll('path').style('opacity', '1');
     d3.selectAll('path.' + classes.getLevel(d.depth)).style('opacity', '0');
     return d3.select(this).style('opacity', '1');
@@ -185,6 +203,9 @@
     };
     tempValues = partition.nodes(data);
     tempValues.forEach(function(d, i) {
+      if (d.depth === 0) {
+        chart.rootCircle = d;
+      }
       if (d.values[0] < 0) {
         return values.negative.push(d.values[0]);
       } else if (d.values[0] !== 0) {
@@ -196,42 +217,37 @@
       positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
     };
     path = svg.selectAll('path').data(partition.nodes(data)).enter().append('g').attr('class', function(d) {
+      if (d.depth === 0) {
+        return 'arc current';
+      } else {
+        return 'arc';
+      }
+    }).on('mouseover', chart.onMouseover).append('path').attr('class', function(d) {
       return classes.getLevel(d.depth);
-    }).append('path').attr('data-code', function(d) {
+    }).attr('data-code', function(d) {
       return d.code;
-    }).attr('class', function(d) {
-      return classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0]);
     }).attr('d', arc).style('display', function(d) {
       if (d.values[0] === 0) {
         return 'none';
       }
     }).style('fill', function(d) {
       return colors.getColor(d.values[0]);
-    }).style('opacity', function(d) {
-      if (d.parent && d.parent.values[0] === d.values[0]) {
-        return 1;
-      } else {
-        return 1;
-      }
-    }).on('click', zoomIn).on('mouseover', chart.highlight).each(function(d) {
-      return d3.select(this.parentNode).append('foreignObject').attr('class', 'root-circle--content').classed('visible', (d.depth === 0 ? true : false)).attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').attr('class', 'root-circle').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').attr('class', 'root-circle--label').each(function(d) {
-        if (d.depth === 0) {
-          tooltip.show(d);
-          breadcrumb.update;
-          return breadcrumb.create(d);
-        }
-      }).each(function(d) {
-        d3.select(this).append('h1').attr('class', 'root-circle--label').text(function(d) {
+    }).on('click', zoomIn).each(function(d) {
+      return d3.select(this.parentNode).append('foreignObject').attr('class', 'main-circle').classed('visible', (d.depth === 0 ? true : false)).attr('x', widthRoot / 2 * -1).attr('y', widthRoot / 2 * -1).attr('width', widthRoot).attr('height', heightRoot).append('xhtml:div').style('width', widthRoot + 'px').style('height', widthRoot + 'px').append('div').each(function(d) {
+        d3.select(this).append('h1').attr('class', 'main-circle--label').text(function(d) {
           return d.name;
         });
-        d3.select(this).append('p').attr('class', 'root-circle--value number').text(function(d) {
+        d3.select(this).append('p').attr('class', 'main-circle--value number').text(function(d) {
           return Math.round(d.values[0]).toLocaleString('fr') + ' €';
         });
-        return d3.select(this).append('button').on('click', function() {
+        return d3.select(this).append('button').attr('class', 'return').classed('visible', (d.depth > 0 ? true : false)).on('click', function() {
           return breadcrumb["return"](d);
-        }).attr('class', 'return').classed('visible', (d.depth > 0 ? true : false));
+        });
       });
     });
+    return chart.init();
   });
+
+  return;
 
 }).call(this);

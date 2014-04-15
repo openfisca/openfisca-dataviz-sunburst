@@ -1,6 +1,5 @@
 # TRIGGERS
 d3.trigger = (d3Obj, evtName) ->
-		console.log(d3Obj);
 		el    = d3Obj[0][0]
 		event = d3.event;
 
@@ -27,33 +26,38 @@ y = d3.scale.sqrt()
 	.range [0, radius]
 
 
-chart = 
-	highlight: (d) ->
-		# d3.selectAll 'path'
-		# 	.style 'opacity', 0.4
-		# d3.select this
-		# 	.style 'opacity', 1
+chart =
+	rootCircle: null,
+	mainCircle: null,
+	init: () ->
+		@.mainCircle = @.rootCircle
+		tooltip.show(chart.rootCircle)
+		breadcrumb.create(chart.rootCircle)
+	onMouseover: (d) ->
+		el = @
+		chart.highlight(el)
 		tooltip.show(d)
-	highlightAll: (s) ->
-		# ## TO FIX : on hover, the path animation stops ###
-		# # Deactivate all segments during transition.
-		# d3.selectAll 'path'
-		# 	.on 'mouseover', null
-		# # Transition each segment to full opacity and then reactivate it.
-		# d3.selectAll 'path'
-		# 	.transition()
-		# 	.duration(750)
-		# 	.style 'opacity', 1
-		# 	.each 'end', () -> 
-		# 		d3.select this
-		# 			.on 'mouseover', chart.highlight
+	onMouseleave: (d) ->
+		chart.highlightAll()
+		tooltip.show(chart.mainCircle)
+	highlight: (el) ->
+		if el.classList.contains 'current'
+			chart.highlightAll()
+		else 
+			d3.selectAll '.arc'
+				.style 'opacity', 0.6
+			d3.select el
+				.style 'opacity', 1
+	highlightAll: () ->
+		d3.selectAll '.arc'
+			.style 'opacity', 1
 
 svg = d3.select 'svg'
 	.attr 'width', width
 	.attr 'height', height
 	.append 'g'
 	.attr 'transform', 'translate(' + width / 2 + ',' + (height / 2) + ')'
-	.on 'mouseleave', chart.highlightAll
+	.on 'mouseleave', chart.onMouseleave
 partition = d3.layout.partition()
 	.value (d) -> 
 		Math.abs Math.round d.values[0]
@@ -90,7 +94,6 @@ breadcrumb =
 	create: (node) ->
 		@el.select 'ul'
 			.append 'li'
-				.on 'click', () ->  breadcrumb.navigate node.code
 				.each () ->
 					d3.select this
 						.append 'span'
@@ -102,11 +105,11 @@ breadcrumb =
 						.append 'h2'
 						.attr 'class', 'breadcrumb--label'
 						.text node.name
-				.attr 'class', 'visible'
-				.attr 'data-depth', node.depth
+				.on 'click', () ->  breadcrumb.navigate node.code
 	update: (path) ->
 		@el.select 'ul'
 			.html('')
+		breadcrumb.create(chart.rootCircle)
 		path.forEach (node) ->
 			breadcrumb.create(node)
 	getAncestors: (node) ->
@@ -136,19 +139,6 @@ tooltip =
 		tooltip.el.select '.tooltip--value'
 			.text Math.round(d.values[0]).toLocaleString('fr') + ' €'
 			.style 'color', colors.getColor(d.values[0]) 
-	# update: () ->
-	# 	tooltip.el.style 'top', d3.event.pageY - (tooltip.height() + 5) + 'px'
-	# 	tooltip.el.style 'left', (d3.event.pageX - tooltip.width() / 2) + 'px'
-	# hide: () ->
-	# 	tooltip.el.transition()
-	# 		.duration 300
-	# 		.style 'opacity', 1e-6
-	# onMouseover: () ->
-	# 	tooltip.el.transition()
-	# 		.duration 300
-	# 		.style 'opacity', 1
-	# onMouseout: () ->
-	# 	tooltip.el.style 'opacity', 0
 
 arcTween = (d) ->
 	xd = d3.interpolate x.domain(), [d.x, d.x + d.dx]
@@ -163,40 +153,27 @@ arcTween = (d) ->
 			y.domain(yd(t)).range yr(t)
 			arc d)
 
-
 zoomIn = (d) ->
-	# update breadcrumb
-	if d.depth == 0 
-		d3.select '#breadcrumb ul'
-			.html ''
-		breadcrumb.create(d)
-	else
-		breadcrumb.update breadcrumb.getAncestors(d)
-	# append label in root-circle
-	d3.selectAll '.root-circle--content'
-		.classed('visible', false)
-	d3.select this.nextElementSibling
-		.classed('visible', true)
+	chart.mainCircle = d
 	path.transition()
 		.duration 750
 		.attrTween 'd', arcTween(d)
-	# hide/unhide root label
-	d3.select '.root-circle--content'
-		.style 'opacity', 0
-		.style 'display', 'none'
-	if breadcrumb.getAncestors(d).length == 0
-		d3.select '.root-circle--content'
-		.style 'opacity', 1
-		.style 'display', 'block'
-	# when former 'root hole' is hidden, delete thin line :
-	# # hide other parts of the zoomed arc
-	# # unhide previously hidden parts
+
+	breadcrumb.update breadcrumb.getAncestors(d)
+	# hide/show label in root-circle
+	d3.selectAll '.arc'
+		.classed 'current', false
+	d3.select @.parentNode
+		.classed 'current', true
+	d3.selectAll '.main-circle'
+		.classed 'visible', false
+	d3.select @.nextElementSibling
+		.classed 'visible', true
 	d3.selectAll 'path'
 		.style 'opacity', '1'
-	# # show only the selected part of the arc
 	d3.selectAll 'path.' + classes.getLevel(d.depth)
 		.style 'opacity', '0'
-	d3.select this
+	d3.select @
 		.style 'opacity', '1'
 
 
@@ -210,6 +187,7 @@ d3.json 'data/example.json', (error, root) ->
 
 	tempValues = partition.nodes data
 	tempValues.forEach (d, i) ->
+		if d.depth == 0 then chart.rootCircle = d
 		if d.values[0] < 0 then values.negative.push(d.values[0])
 		else if d.values[0] != 0 then values.positive.push(d.values[0])
 
@@ -217,60 +195,52 @@ d3.json 'data/example.json', (error, root) ->
 		negative: d3.scale.linear().domain([d3.max(values.negative), d3.min(values.negative)]).rangeRound([0, 9])
 		positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
 
+
 	path = svg.selectAll 'path'
 		.data partition.nodes data
 		.enter()
 		.append 'g'
-		.attr 'class', (d) -> classes.getLevel(d.depth)
+		.attr 'class', (d) -> if d.depth is 0 then 'arc current' else 'arc'
+		.on 'mouseover', chart.onMouseover
 		.append 'path'
+		.attr 'class', (d) -> classes.getLevel(d.depth)
 		.attr 'data-code', (d) -> d.code
-		.attr 'class', (d) -> classes.getLevel(d.depth) + ' ' + classes.getSign(d.values[0])
 		.attr 'd', arc
 		.style 'display', (d) -> if d.values[0] == 0 then 'none'
 		.style 'fill', (d) -> colors.getColor(d.values[0])
-		.style 'opacity', (d) ->
-			if d.parent and d.parent.values[0] == d.values[0] then 1
-			else 1
 		.on 'click', zoomIn
-		.on 'mouseover', chart.highlight
 		# .on 'mousemove', tooltip.update
 		# .on 'mouseout', tooltip.hide
 		.each (d) ->
 			d3.select this.parentNode
 				.append 'foreignObject'
-				.attr 'class', 'root-circle--content'
+				.attr 'class', 'main-circle'
 				.classed('visible', (if d.depth == 0 then true else false))
 				.attr 'x', widthRoot / 2 * -1
 				.attr 'y', widthRoot / 2 * -1
 				.attr 'width', widthRoot
 				.attr 'height', heightRoot
 				.append 'xhtml:div'
-				.attr 'class', 'root-circle'
 				.style 'width', widthRoot + 'px'
 				.style 'height', widthRoot + 'px'
 				.append 'div'
-				.attr 'class', 'root-circle--label'
-				# Update tooltip with root value
-				.each (d) ->
-					if d.depth is 0
-						tooltip.show(d)
-						breadcrumb.update
-						breadcrumb.create(d)
 				# Append all labels
 				.each (d) ->
 					d3.select this
 						.append 'h1'
-						.attr 'class', 'root-circle--label'
+						.attr 'class', 'main-circle--label'
 						.text (d) -> d.name
 					d3.select this
 						.append 'p'
-						.attr 'class', 'root-circle--value number'
+						.attr 'class', 'main-circle--value number'
 						.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
 					d3.select this 
 						.append 'button'
-						.on 'click', () -> breadcrumb.return d
 						.attr 'class', 'return'
 						.classed('visible', (if d.depth > 0 then true else false))
+						.on 'click', () -> breadcrumb.return d
+
+		chart.init()
 	return
 
 
