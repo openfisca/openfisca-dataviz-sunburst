@@ -264,7 +264,9 @@ d3.json url, (error, root) ->
 				.append 'svg:text'
 				.attr 'class', 'main-circle--label'
 				.attr 'y', '-20'
-				.text((d) -> d.name)
+				.text((d) -> 
+					if d.name.length > 25 then d.name.substring(0,20) + '...'
+					else d.name)
 			d3.select this.parentNode
 				.append 'svg:text'
 				.classed('main-circle--value', true)
