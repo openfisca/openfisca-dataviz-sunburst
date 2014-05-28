@@ -109,7 +109,7 @@ arc = d3.svg.arc()
 		Math.max 0, Math.min(2 * Math.PI, x(d.x))
 	.endAngle (d) -> Math.max 0, Math.min(2 * Math.PI, x(d.x + d.dx))
 	.innerRadius (d) ->
-		if d is chart.mainCircle then Math.max 0, y(d.y) 
+		if d is chart.mainCircle then Math.max 0, y(d.y)
 		else if d.depth is chart.mainCircle.depth + 1 then Math.max 100, y(d.y)
 		# else if d.depth is chart.mainCircle.depth - 1 then 0
 		else Math.max 0, y(d.y)
@@ -216,102 +216,125 @@ arcTween = (d) ->
 			arc d)
 
 # API KEY
-getApiKey = () ->
-	string = window.location.search.substring(1)
-	key = string.split '='
-	key = decodeURIComponent key[1]
-	key
 
-url = getApiKey()
+getQueryParams = () ->
+	params = {}
+	query = window.location.search.substring(1)
+	for queryFragment in query.split('&')
+		pair = queryFragment.split('=')
+		param = params[pair[0]]
+		if not param?
+			# If first entry with this name
+			params[pair[0]] = unescape(pair[1])
+		else if typeof param is 'string'
+			# If second entry with this name
+			param = [param, pair[1]]
+			params[pair[0]] = unescape(param);
+			# If third or later entry with this name
+		else
+			param.push(unescape(pair[1]))
+	return params
+
+
+queryParams = getQueryParams()
+
 
 # API
-d3.json url, (error, root) ->
-	data = root.value
-	# INITIALIZATION
-	values =
-		negative: []
-		positive: []
+d3.json queryParams.test_case_url, (error, testCase) ->
+	data =
+		scenarios: [
+			legislation_url: queryParams.legislation_url
+			test_case: testCase
+			year: parseInt queryParams.year
+			]
+	d3.json('http://api.openfisca.fr/api/1/simulate')
+		.header("Content-Type", "application/json")
+		.post JSON.stringify(data), (error, root) ->
+			data = root.value
+			# INITIALIZATION
+			values =
+				negative: []
+				positive: []
 
-	tempValues = partition.nodes data
-	tempValues.forEach (d, i) ->
-		if d.depth == 0 then chart.rootCircle = d
-		if d.values[0] < 0 then values.negative.push(d.values[0])
-		else if d.values[0] != 0 then values.positive.push(d.values[0])
+			tempValues = partition.nodes data
+			tempValues.forEach (d, i) ->
+				if d.depth == 0 then chart.rootCircle = d
+				if d.values[0] < 0 then values.negative.push(d.values[0])
+				else if d.values[0] != 0 then values.positive.push(d.values[0])
 
-	colors.scale =
-		negative: d3.scale.linear().domain([d3.max(values.negative), d3.min(values.negative)]).rangeRound([0, 9])
-		positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
+			colors.scale =
+				negative: d3.scale.linear().domain([d3.max(values.negative), d3.min(values.negative)]).rangeRound([0, 9])
+				positive: d3.scale.linear().domain([d3.min(values.positive), d3.max(values.positive)]).rangeRound([0, 9])
 
-	chart.init()
+			chart.init()
 
+			path = chart.el.selectAll 'path'
+				.data (partition.nodes data).filter((d) -> return d.values[0] != 0)
+				.enter()
+				.append 'g'
+				.attr 'class', (d) -> if d.depth is 0 then 'arc current' else 'arc'
+				.on 'mouseover', chart.onMouseover
+				.append 'path'
+				.attr 'class', (d) -> classes.getLevel(d.depth)
+				.attr 'data-code', (d) -> d.code
+				.attr 'd', arc
+				.style 'fill', (d) -> colors.getColor(d.values[0])
+				.on 'click', chart.zoomIn
+				# .on 'mousemove', tooltip.update
+				# .on 'mouseout', tooltip.hide
+				.each (d) ->
+					d3.select this.parentNode
+						.append 'svg:text'
+						.attr 'class', 'main-circle--label'
+						.attr 'y', '-20'
+						.text((d) ->
+							if d.name.length > 25 then d.name.substring(0,20) + '...'
+							else d.name)
+					d3.select this.parentNode
+						.append 'svg:text'
+						.classed('main-circle--value', true)
+						.classed('number', true)
+						.attr 'y', '20'
+						.text((d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €')
+					d3.select this.parentNode
+						.filter((d) -> return d.depth != 0)
+						.append 'image'
+						.classed('return', true)
+						.attr 'xlink:href', 'images/icon-return.png'
+						.attr 'width', '35'
+						.attr 'height', '35'
+						.attr 'x', '-17.5'
+						.attr 'y', '35'
+						.on 'click', () -> breadcrumb.return d
+					# d3.select this.parentNode
+					# 	.append 'foreignObject'
+					# 	.attr 'class', 'main-circle'
+					# 	.classed('visible', (if d.depth == 0 then true else false))
+					# 	.attr 'x', () -> (chart.getDimensions() / 2.63) / 2 * -1
+					# 	.attr 'y', () -> (chart.getDimensions() / 2.63) / 2 * -1
+					# 	.attr 'width', () -> chart.getDimensions() / 2.63
+					# 	.attr 'height',() -> chart.getDimensions() / 2.63
+					# 	.append 'xhtml:div'
+					# 	.style 'width', () -> chart.getDimensions() / 2.63 + 'px'
+					# 	.style 'height', () -> chart.getDimensions() / 2.63 + 'px'
+					# 	.append 'div'
+					# 	# Append all labels
+					# 	.each (d) ->
+					# 		d3.select this
+					# 			.append 'h1'
+					# 			.attr 'class', 'main-circle--label'
+					# 			.text (d) -> d.name
+					# 		d3.select this
+					# 			.append 'p'
+					# 			.attr 'class', 'main-circle--value number'
+					# 			.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
+					# 		d3.select this
+					# 			.append 'button'
+					# 			.attr 'class', 'return'
+					# 			.classed('visible', (if d.depth > 0 then true else false))
+					# 			.on 'click', () -> breadcrumb.return d
 
-	path = chart.el.selectAll 'path'
-		.data (partition.nodes data).filter((d) -> return d.values[0] != 0)
-		.enter()
-		.append 'g'
-		.attr 'class', (d) -> if d.depth is 0 then 'arc current' else 'arc'
-		.on 'mouseover', chart.onMouseover
-		.append 'path'
-		.attr 'class', (d) -> classes.getLevel(d.depth)
-		.attr 'data-code', (d) -> d.code
-		.attr 'd', arc
-		.style 'fill', (d) -> colors.getColor(d.values[0])
-		.on 'click', chart.zoomIn
-		# .on 'mousemove', tooltip.update
-		# .on 'mouseout', tooltip.hide
-		.each (d) ->
-			d3.select this.parentNode
-				.append 'svg:text'
-				.attr 'class', 'main-circle--label'
-				.attr 'y', '-20'
-				.text((d) -> 
-					if d.name.length > 25 then d.name.substring(0,20) + '...'
-					else d.name)
-			d3.select this.parentNode
-				.append 'svg:text'
-				.classed('main-circle--value', true)
-				.classed('number', true)
-				.attr 'y', '20'
-				.text((d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €')
-			d3.select this.parentNode
-				.filter((d) -> return d.depth != 0)
-				.append 'image'
-				.classed('return', true)
-				.attr 'xlink:href', 'images/icon-return.png'
-				.attr 'width', '35'
-				.attr 'height', '35'
-				.attr 'x', '-17.5'
-				.attr 'y', '35'
-				.on 'click', () -> breadcrumb.return d
-			# d3.select this.parentNode
-			# 	.append 'foreignObject'
-			# 	.attr 'class', 'main-circle'
-			# 	.classed('visible', (if d.depth == 0 then true else false))
-			# 	.attr 'x', () -> (chart.getDimensions() / 2.63) / 2 * -1
-			# 	.attr 'y', () -> (chart.getDimensions() / 2.63) / 2 * -1
-			# 	.attr 'width', () -> chart.getDimensions() / 2.63
-			# 	.attr 'height',() -> chart.getDimensions() / 2.63
-			# 	.append 'xhtml:div'
-			# 	.style 'width', () -> chart.getDimensions() / 2.63 + 'px'
-			# 	.style 'height', () -> chart.getDimensions() / 2.63 + 'px'
-			# 	.append 'div'
-			# 	# Append all labels
-			# 	.each (d) ->
-			# 		d3.select this
-			# 			.append 'h1'
-			# 			.attr 'class', 'main-circle--label'
-			# 			.text (d) -> d.name
-			# 		d3.select this
-			# 			.append 'p'
-			# 			.attr 'class', 'main-circle--value number'
-			# 			.text (d) -> Math.round(d.values[0]).toLocaleString('fr') + ' €'
-			# 		d3.select this
-			# 			.append 'button'
-			# 			.attr 'class', 'return'
-			# 			.classed('visible', (if d.depth > 0 then true else false))
-			# 			.on 'click', () -> breadcrumb.return d
-
-	return
+			return
 
 d3.select '.null'
 	.remove()
