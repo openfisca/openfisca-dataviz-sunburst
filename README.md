@@ -1,5 +1,4 @@
-Etalab Datavisualisation 03
-================
+# [obsolete] Etalab Datavisualisation 03
 
 
 ## Coffee
